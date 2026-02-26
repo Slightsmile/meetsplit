@@ -1,0 +1,17 @@
+
+> meetsplit@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.3
+
+   Creating an optimized production build ...
+ ⨯ page.tsx doesn't have a root layout. To fix this error, make sure every page has a root layout.
+
+> Build error occurred
+Error: Jest worker encountered 1 child process exceptions, exceeding retry limit
+    at ChildProcessWorker.initialize (D:\Code\hangout\meetsplit\node_modules\next\dist\compiled\jest-worker\index.js:1:11580)
+    at ChildProcessWorker._onExit (D:\Code\hangout\meetsplit\node_modules\next\dist\compiled\jest-worker\index.js:1:12545)
+    at ChildProcess.emit (node:events:531:35)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12) {
+  type: 'WorkerError'
+}
