@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import { RoomMemberData } from "@/types/firebase";
 import { addExpense } from "@/lib/firebase/firestore";
 import { Plus, Trash2 } from "lucide-react";
+import { formatCurrency as formatCurrencyUtil } from "@/lib/utils/formatCurrency";
 
 interface FoodItem {
     name: string;
@@ -130,8 +131,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
         setIsSubmitting(false);
     };
 
-    const formatCurrency = (val: number) =>
-        new Intl.NumberFormat("en-US", { style: "currency", currency }).format(val);
+    const formatCurrencyVal = (val: number) => formatCurrencyUtil(val, currency);
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6 p-5 sm:p-6 rounded-[1.5rem] bg-white shadow-xl shadow-slate-200/40 border border-slate-100 relative">
@@ -193,7 +193,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                     {totalAmount > 0 && (
                         <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100">
                             <p className="text-sm sm:text-base text-slate-700">
-                                Each person pays: <span className="font-black text-blue-700 ml-1">{formatCurrency(equalShare)}</span>
+                                Each person pays: <span className="font-black text-blue-700 ml-1">{formatCurrencyVal(equalShare)}</span>
                                 <span className="text-xs font-semibold text-slate-400 block sm:inline sm:ml-2 mt-1 sm:mt-0">({members.length} members)</span>
                             </p>
                         </div>
@@ -217,7 +217,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                                         {m.displayName}{m.userId === currentUserId ? " (You)" : ""}
                                     </span>
                                     <span className="text-xs font-medium text-slate-500">
-                                        Subtotal: {formatCurrency(subtotal)}
+                                        Subtotal: {formatCurrencyVal(subtotal)}
                                     </span>
                                 </div>
 
@@ -295,7 +295,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                                 </div>
                                 {vatAmount > 0 && (
                                     <span className="text-xs font-semibold text-slate-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200">
-                                        VAT: {formatCurrency(vatAmount)}
+                                        VAT: {formatCurrencyVal(vatAmount)}
                                     </span>
                                 )}
                             </div>
@@ -306,17 +306,17 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                     <div className="pt-3 border-t border-slate-200 space-y-1">
                         <div className="flex justify-between text-sm">
                             <span className="text-slate-600">Subtotal:</span>
-                            <span className="font-medium text-slate-900">{formatCurrency(manualSubtotal)}</span>
+                            <span className="font-medium text-slate-900">{formatCurrencyVal(manualSubtotal)}</span>
                         </div>
                         {vatEnabled && vatAmount > 0 && (
                             <div className="flex justify-between text-sm">
                                 <span className="text-slate-600">VAT ({vatType === "PERCENT" ? `${parsedVatValue}%` : 'Amount'}):</span>
-                                <span className="font-medium text-slate-900">{formatCurrency(vatAmount)}</span>
+                                <span className="font-medium text-slate-900">{formatCurrencyVal(vatAmount)}</span>
                             </div>
                         )}
                         <div className="flex justify-between text-sm font-bold mt-1">
                             <span className="text-slate-900">Grand Total:</span>
-                            <span className="text-slate-900">{formatCurrency(manualGrandTotal)}</span>
+                            <span className="text-slate-900">{formatCurrencyVal(manualGrandTotal)}</span>
                         </div>
                     </div>
                 </div>

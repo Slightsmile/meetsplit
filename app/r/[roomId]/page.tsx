@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, ArrowRight, Calendar, Receipt, Users, Share2, Check, Megaphone, Trash2, PartyPopper } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 export default function RoomOverview({ params }: { params: { roomId: string } }) {
     const { user } = useAuth();
@@ -61,8 +62,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
     const totalExpenses = expenses.reduce((sum, e) => sum + e.totalAmount, 0);
     const perPersonAvg = members.length > 0 ? totalExpenses / members.length : 0;
 
-    const formatMoney = (amount: number) =>
-        new Intl.NumberFormat("en-US", { style: "currency", currency: room.currency }).format(amount);
+    const formatMoney = (amount: number) => formatCurrency(amount, room.currency);
 
     const getMemberName = (userId: string) =>
         members.find(m => m.userId === userId)?.displayName || "Unknown";
@@ -317,7 +317,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                                 <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
                                     <Receipt className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                                 </div>
-                                <div className="text-sm sm:text-xl lg:text-3xl font-black tracking-tight drop-shadow-sm break-words leading-tight" title={formatMoney(totalExpenses)}>
+                                <div className="text-lg sm:text-2xl lg:text-4xl font-black tracking-tight drop-shadow-sm" title={formatMoney(totalExpenses)}>
                                     {formatMoney(totalExpenses)}
                                 </div>
                                 <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-teal-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Spent</div>

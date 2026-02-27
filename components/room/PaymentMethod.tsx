@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { RoomMemberData } from "@/types/firebase";
+import { formatCurrency as formatCurrencyUtil } from "@/lib/utils/formatCurrency";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -42,8 +43,7 @@ export function PaymentMethod({
     const [finalized, setFinalized] = useState(false);
 
     const formatMoney = useCallback(
-        (amount: number) =>
-            new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount),
+        (amount: number) => formatCurrencyUtil(amount, currency),
         [currency]
     );
 

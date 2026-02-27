@@ -22,6 +22,7 @@ export default function RoomLayout({
     const { room, members, availabilities, expenses, expenseParts, loading: roomLoading } = useRoomData(params.roomId);
     const router = useRouter();
     const pathname = usePathname();
+    const [viewAsGuest, setViewAsGuest] = useState(false);
 
     useEffect(() => {
         if (!authLoading && !user) return;
@@ -29,6 +30,16 @@ export default function RoomLayout({
             router.push("/");
         }
     }, [user, room, authLoading, roomLoading, router]);
+
+    const isAdmin = room ? room.adminId === user?.uid : false;
+    const isEventMode = room?.isEventMode ?? false;
+
+    // Redirect to overview if currently on a restricted tab in guest view
+    useEffect(() => {
+        if (viewAsGuest && isEventMode && pathname !== `/r/${params.roomId}`) {
+            router.push(`/r/${params.roomId}`);
+        }
+    }, [viewAsGuest, isEventMode, pathname, params.roomId, router]);
 
     if (authLoading || roomLoading) {
         return (
@@ -41,10 +52,6 @@ export default function RoomLayout({
 
     if (!room || !user) return null;
 
-    const isAdmin = room.adminId === user.uid;
-    const isEventMode = room.isEventMode ?? false;
-    const [viewAsGuest, setViewAsGuest] = useState(false);
-
     const allTabs = [
         { name: "Overview", href: `/r/${params.roomId}` },
         { name: "Availability", href: `/r/${params.roomId}/availability` },
@@ -55,13 +62,6 @@ export default function RoomLayout({
     const tabs = isEventMode && (!isAdmin || viewAsGuest)
         ? allTabs.filter(t => t.name === "Overview")
         : allTabs;
-
-    // Redirect to overview if currently on a restricted tab in guest view
-    useEffect(() => {
-        if (viewAsGuest && isEventMode && pathname !== `/r/${params.roomId}`) {
-            router.push(`/r/${params.roomId}`);
-        }
-    }, [viewAsGuest, isEventMode, pathname, params.roomId, router]);
 
     const currentHelpPage = pathname.endsWith("/availability")
         ? "availability" as const

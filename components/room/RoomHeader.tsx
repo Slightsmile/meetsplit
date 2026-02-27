@@ -64,9 +64,9 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
     };
 
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 space-y-3">
-            {/* Top row: Room name + admin icons on left, Share on right */}
-            <div className="flex items-center justify-between gap-4">
+        <div className="bg-white p-4 sm:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100">
+            <div className="flex items-start sm:items-center justify-between gap-4">
+                {/* Left: Room name + admin icons */}
                 <div className="flex items-center gap-2 min-w-0">
                     <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight truncate">
                         {room.name}
@@ -95,36 +95,37 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
                     )}
                 </div>
 
-                <Button
-                    variant="default"
-                    size="sm"
-                    onClick={handleShareClick}
-                    className="h-9 rounded-xl shadow-md shadow-blue-500/25 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all text-xs sm:text-sm px-3 sm:px-4 shrink-0"
-                >
-                    <Share2 className="w-4 h-4 sm:mr-1.5" />
-                    <span className="hidden sm:inline">Share</span>
-                </Button>
-            </div>
-
-            {/* Bottom row: Code + Copy */}
-            <div className="flex items-center justify-between sm:justify-start gap-2">
-                <div className="inline-flex items-center bg-slate-100/80 px-3 py-1.5 rounded-full border border-slate-200 whitespace-nowrap">
-                    <span className="text-xs text-slate-500 font-medium mr-1.5">Code:</span>
-                    <span className="font-mono text-slate-800 font-bold tracking-[0.15em] text-sm">{room.roomId}</span>
+                {/* Right: Share + Code + Copy */}
+                <div className="flex flex-col items-end gap-2 shrink-0">
+                    <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleShareClick}
+                        className="h-9 rounded-xl shadow-md shadow-blue-500/25 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all text-xs sm:text-sm px-3 sm:px-5"
+                    >
+                        <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5" />
+                        Share
+                    </Button>
+                    <div className="flex items-center gap-1.5">
+                        <div className="inline-flex items-center bg-slate-100/80 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-slate-200 whitespace-nowrap">
+                            <span className="text-[10px] sm:text-xs text-slate-500 font-medium mr-1">Code:</span>
+                            <span className="font-mono text-slate-800 font-bold tracking-[0.15em] text-xs sm:text-sm">{room.roomId}</span>
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCopyCode}
+                            className="h-7 sm:h-8 px-2 sm:px-3 rounded-full text-slate-500 hover:text-slate-800 hover:bg-slate-100"
+                            aria-label="Copy room URL"
+                        >
+                            {codeCopied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+                            <span className="text-[10px] sm:text-xs font-semibold ml-0.5 sm:ml-1">{codeCopied ? "Copied!" : "Copy"}</span>
+                        </Button>
+                    </div>
                 </div>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleCopyCode}
-                    className="h-8 px-3 rounded-full text-slate-500 hover:text-slate-800 hover:bg-slate-100"
-                    aria-label="Copy room URL"
-                >
-                    {codeCopied ? <Check className="w-4 h-4 text-green-500 mr-1" /> : <Copy className="w-4 h-4 mr-1" />}
-                    <span className="text-xs font-semibold">{codeCopied ? "Copied!" : "Copy"}</span>
-                </Button>
             </div>
 
-            {/* Share panel (shown when share button is clicked) */}
+            {/* Share panel (shown when share button is clicked on desktop) */}
             {sharePanelOpen && (
                 <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Invite Link</label>

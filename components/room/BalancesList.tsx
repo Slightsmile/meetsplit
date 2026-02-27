@@ -4,6 +4,7 @@ import { SimplifiedDebt } from "@/lib/utils/calculateSplit";
 import { RoomMemberData } from "@/types/firebase";
 import { Card, CardContent } from "../ui/card";
 import { ArrowRight } from "lucide-react";
+import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 interface Props {
     debts: SimplifiedDebt[];
@@ -19,9 +20,7 @@ export function BalancesList({ debts, members, currency }: Props) {
         return { name, initials };
     };
 
-    const formatMoney = (amount: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
-    };
+    const formatMoney = (amount: number) => formatCurrency(amount, currency);
 
     if (debts.length === 0) {
         return (
