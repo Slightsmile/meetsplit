@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { joinRoom, getRoomById } from "@/lib/firebase/firestore";
+import { joinRoom, getRoomById, isUserMember } from "@/lib/firebase/firestore";
 import { RoomData } from "@/types/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,14 +26,22 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
             try {
                 const r = await getRoomById(roomCode);
                 setRoom(r);
+                // Auto-redirect if user is already a member
+                if (r && user) {
+                    const isMember = await isUserMember(roomCode, user.uid);
+                    if (isMember) {
+                        router.replace(`/r/${roomCode}`);
+                        return;
+                    }
+                }
             } catch {
                 setRoom(null);
             } finally {
                 setRoomLoading(false);
             }
         }
-        fetchRoom();
-    }, [roomCode]);
+        if (!authLoading) fetchRoom();
+    }, [roomCode, user, authLoading, router]);
 
     const handleJoin = async (e: React.FormEvent) => {
         e.preventDefault();

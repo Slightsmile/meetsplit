@@ -4,11 +4,12 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useRoomData } from "@/lib/hooks/useRoomData";
 import { RoomHeader } from "@/components/room/RoomHeader";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { HelpToggle } from "@/components/room/HelpToggle";
+import { Eye } from "lucide-react";
 
 export default function RoomLayout({
     children,
@@ -42,6 +43,7 @@ export default function RoomLayout({
 
     const isAdmin = room.adminId === user.uid;
     const isEventMode = room.isEventMode ?? false;
+    const [viewAsGuest, setViewAsGuest] = useState(false);
 
     const allTabs = [
         { name: "Overview", href: `/r/${params.roomId}` },
@@ -49,10 +51,17 @@ export default function RoomLayout({
         { name: "Expenses", href: `/r/${params.roomId}/split` },
     ];
 
-    // In event mode, non-admins only see Overview
-    const tabs = isEventMode && !isAdmin
+    // In event mode, non-admins (or admin in guest view) only see Overview
+    const tabs = isEventMode && (!isAdmin || viewAsGuest)
         ? allTabs.filter(t => t.name === "Overview")
         : allTabs;
+
+    // Redirect to overview if currently on a restricted tab in guest view
+    useEffect(() => {
+        if (viewAsGuest && isEventMode && pathname !== `/r/${params.roomId}`) {
+            router.push(`/r/${params.roomId}`);
+        }
+    }, [viewAsGuest, isEventMode, pathname, params.roomId, router]);
 
     const currentHelpPage = pathname.endsWith("/availability")
         ? "availability" as const
@@ -70,7 +79,18 @@ export default function RoomLayout({
                     availabilities={availabilities}
                     expenses={expenses}
                     expenseParts={expenseParts}
+                    viewAsGuest={viewAsGuest}
+                    onToggleViewAsGuest={() => setViewAsGuest(v => !v)}
                 />
+
+                {viewAsGuest && (
+                    <div className="flex items-center justify-center">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-violet-50 text-violet-700 rounded-full text-xs font-semibold border border-violet-200">
+                            <Eye className="w-3.5 h-3.5" />
+                            Viewing as Guest
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex items-center justify-center">
                     <nav className="flex space-x-2 bg-white p-1 rounded-lg border border-slate-200">

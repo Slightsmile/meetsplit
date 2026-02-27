@@ -63,13 +63,18 @@ export async function getRoomById(roomId: string): Promise<RoomData | null> {
     return null;
 }
 
+export async function isUserMember(roomId: string, userId: string): Promise<boolean> {
+    const memberRef = doc(db, "roomMembers", `${roomId}_${userId}`);
+    const snap = await getDoc(memberRef);
+    return snap.exists();
+}
+
 export async function joinRoom(roomId: string, userId: string, displayName: string) {
-    // Check if room exists and is not locked
+    // Check if room exists
     const room = await getRoomById(roomId);
     if (!room) throw new Error("ROOM_NOT_FOUND");
-    if (room.isLocked) throw new Error("ROOM_LOCKED");
 
-    // Check if this user already has a membership (same uid)
+    // Check if this user already has a membership (same uid) — allow even if locked
     const memberRef = doc(db, "roomMembers", `${roomId}_${userId}`);
     const existingMember = await getDoc(memberRef);
     if (existingMember.exists()) {
@@ -77,6 +82,9 @@ export async function joinRoom(roomId: string, userId: string, displayName: stri
         await updateDoc(memberRef, { displayName });
         return existingMember.data() as RoomMemberData;
     }
+
+    // Only check lock for NEW members
+    if (room.isLocked) throw new Error("ROOM_LOCKED");
 
     // Check if a member with the same display name already exists in this room
     const membersQuery = query(
