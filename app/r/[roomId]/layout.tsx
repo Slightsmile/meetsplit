@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { HelpToggle } from "@/components/room/HelpToggle";
 import { Eye } from "lucide-react";
+import { ViewAsGuestProvider } from "@/lib/hooks/useViewAsGuest";
 
 export default function RoomLayout({
     children,
@@ -114,9 +115,11 @@ export default function RoomLayout({
                     </nav>
                 </div>
 
-                <main className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 min-h-[500px]">
-                    {children}
-                </main>
+                <ViewAsGuestProvider value={{ viewAsGuest }}>
+                    <main className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 min-h-[500px]">
+                        {children}
+                    </main>
+                </ViewAsGuestProvider>
             </div>
 
             <HelpToggle currentPage={currentHelpPage} />

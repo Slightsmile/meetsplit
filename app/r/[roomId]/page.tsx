@@ -15,12 +15,14 @@ import { ArrowLeft, ArrowRight, Calendar, Receipt, Users, Share2, Check, Megapho
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { useViewAsGuest } from "@/lib/hooks/useViewAsGuest";
 
 export default function RoomOverview({ params }: { params: { roomId: string } }) {
     const { user } = useAuth();
     const { room, members, availabilities, expenses, expenseParts } = useRoomData(params.roomId);
     const router = useRouter();
     const [showMembers, setShowMembers] = useState(false);
+    const { viewAsGuest } = useViewAsGuest();
 
     // Announcement state
     const [announcementNotice, setAnnouncementNotice] = useState("");
@@ -53,7 +55,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
         setEventDateLoaded(true);
     }
 
-    const isAdmin = room.adminId === user.uid;
+    const isAdmin = viewAsGuest ? false : room.adminId === user.uid;
     const isEventMode = room.isEventMode ?? false;
     const memberIds = members.map(m => m.userId);
     const bestDates = calculateBestDates(availabilities, memberIds);

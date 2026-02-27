@@ -95,8 +95,8 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
                     )}
                 </div>
 
-                {/* Right: Share + Code + Copy */}
-                <div className="flex flex-col items-end gap-2 shrink-0">
+                {/* Right: Share + Code + Copy — share centered relative to code row */}
+                <div className="flex items-center gap-3 shrink-0">
                     <Button
                         variant="default"
                         size="sm"
