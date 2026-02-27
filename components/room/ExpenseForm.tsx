@@ -31,7 +31,8 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
 
     // VAT
     const [vatEnabled, setVatEnabled] = useState(false);
-    const [vatPercent, setVatPercent] = useState("0");
+    const [vatType, setVatType] = useState<"PERCENT" | "AMOUNT">("PERCENT");
+    const [vatValue, setVatValue] = useState("0");
 
     const totalAmount = parseFloat(amount) || 0;
     const equalShare = members.length > 0 ? totalAmount / members.length : 0;
@@ -43,8 +44,10 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
     };
 
     const manualSubtotal = members.reduce((sum, m) => sum + getMemberSubtotal(m.userId), 0);
-    const vatRate = parseFloat(vatPercent) || 0;
-    const vatAmount = splitType === "MANUAL" && vatEnabled ? manualSubtotal * (vatRate / 100) : 0;
+    const parsedVatValue = parseFloat(vatValue) || 0;
+    const vatAmount = splitType === "MANUAL" && vatEnabled
+        ? (vatType === "PERCENT" ? manualSubtotal * (parsedVatValue / 100) : parsedVatValue)
+        : 0;
     const manualGrandTotal = manualSubtotal + vatAmount;
 
     // Add a food item row for a member
@@ -98,7 +101,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
             // Distribute VAT proportionally
             participants = members.map(m => {
                 const sub = getMemberSubtotal(m.userId);
-                const memberVat = manualSubtotal > 0 && vatEnabled ? sub * (vatRate / 100) : 0;
+                const memberVat = manualSubtotal > 0 && vatEnabled ? (sub / manualSubtotal) * vatAmount : 0;
                 return {
                     userId: m.userId,
                     owedAmount: sub + memberVat
@@ -122,7 +125,8 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
         setSplitType("EQUAL");
         setMemberItems({});
         setVatEnabled(false);
-        setVatPercent("0");
+        setVatType("PERCENT");
+        setVatValue("0");
         setIsSubmitting(false);
     };
 
@@ -130,58 +134,62 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
         new Intl.NumberFormat("en-US", { style: "currency", currency }).format(val);
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-xl bg-slate-50 border-slate-200">
-            <h3 className="font-semibold text-slate-800">Add an Expense</h3>
+        <form onSubmit={handleSubmit} className="space-y-6 p-5 sm:p-6 rounded-[1.5rem] bg-white shadow-xl shadow-slate-200/40 border border-slate-100 relative">
+            <h3 className="text-xl font-bold text-slate-800 tracking-tight">Add an Expense</h3>
 
             <div>
-                <label className="text-sm text-slate-500 mb-1 block">Description</label>
+                <label className="text-sm font-semibold text-slate-700 mb-1.5 block">Description</label>
                 <Input
                     placeholder="Dinner, Airbnb, etc."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    className="h-14 sm:h-12 rounded-xl sm:rounded-lg bg-slate-50 border-slate-200 focus:bg-white text-base px-4"
                     required
                 />
             </div>
 
             {/* Paid by selector */}
             <div>
-                <label className="text-sm text-slate-500 mb-1 block">Who paid?</label>
-                <select
-                    value={paidBy}
-                    onChange={(e) => setPaidBy(e.target.value)}
-                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                    {members.map(m => (
-                        <option key={m.userId} value={m.userId}>
-                            {m.displayName}{m.userId === currentUserId ? " (You)" : ""}
-                        </option>
-                    ))}
-                </select>
+                <label className="text-sm font-semibold text-slate-700 mb-1.5 block">Who paid?</label>
+                <div className="relative">
+                    <select
+                        value={paidBy}
+                        onChange={(e) => setPaidBy(e.target.value)}
+                        className="w-full h-14 sm:h-12 rounded-xl sm:rounded-lg border border-slate-200 bg-slate-50 px-4 text-base text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors appearance-none"
+                    >
+                        {members.map(m => (
+                            <option key={m.userId} value={m.userId}>
+                                {m.displayName}{m.userId === currentUserId ? " (You)" : ""}
+                            </option>
+                        ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                    </div>
+                </div>
             </div>
 
             {/* Split type toggle */}
             <div>
-                <label className="text-sm text-slate-500 mb-2 block">Split method</label>
-                <div className="flex space-x-2">
+                <label className="text-sm font-semibold text-slate-700 mb-2 block">Split method</label>
+                <div className="flex bg-slate-100 p-1.5 rounded-2xl sm:rounded-xl w-full">
                     <button
                         type="button"
                         onClick={() => setSplitType("EQUAL")}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                            splitType === "EQUAL"
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "bg-white text-slate-600 border-slate-300 hover:border-blue-400"
-                        }`}
+                        className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${splitType === "EQUAL"
+                            ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
+                            : "text-slate-500 hover:text-slate-700"
+                            }`}
                     >
                         Equal Split
                     </button>
                     <button
                         type="button"
                         onClick={() => setSplitType("MANUAL")}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                            splitType === "MANUAL"
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "bg-white text-slate-600 border-slate-300 hover:border-blue-400"
-                        }`}
+                        className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${splitType === "MANUAL"
+                            ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
+                            : "text-slate-500 hover:text-slate-700"
+                            }`}
                     >
                         Manual Split
                     </button>
@@ -190,23 +198,24 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
 
             {/* Equal split: total amount + summary */}
             {splitType === "EQUAL" && (
-                <div className="space-y-3">
+                <div className="space-y-4">
                     <div>
-                        <label className="text-sm text-slate-500 mb-1 block">Total Amount</label>
+                        <label className="text-sm font-semibold text-slate-700 mb-1.5 block">Total Amount</label>
                         <Input
                             type="number"
                             step="0.01"
                             placeholder="0.00"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
+                            className="h-14 sm:h-12 rounded-xl sm:rounded-lg text-lg sm:text-base font-bold text-slate-900 bg-slate-50 px-4 focus:bg-white"
                             required
                         />
                     </div>
                     {totalAmount > 0 && (
-                        <div className="p-3 rounded-lg bg-white border border-slate-200">
-                            <p className="text-sm text-slate-600">
-                                Each person pays: <span className="font-bold text-slate-900">{formatCurrency(equalShare)}</span>
-                                <span className="text-xs text-slate-400 ml-2">({members.length} members)</span>
+                        <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100">
+                            <p className="text-sm sm:text-base text-slate-700">
+                                Each person pays: <span className="font-black text-blue-700 ml-1">{formatCurrency(equalShare)}</span>
+                                <span className="text-xs font-semibold text-slate-400 block sm:inline sm:ml-2 mt-1 sm:mt-0">({members.length} members)</span>
                             </p>
                         </div>
                     )}
@@ -272,7 +281,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                     })}
 
                     {/* VAT option */}
-                    <div className="pt-3 border-t border-slate-200 space-y-2">
+                    <div className="pt-3 border-t border-slate-200 space-y-3">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="checkbox"
@@ -280,24 +289,33 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                                 onChange={(e) => setVatEnabled(e.target.checked)}
                                 className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                             />
-                            <span className="text-sm text-slate-700">Add VAT / Tax</span>
+                            <span className="text-sm font-medium text-slate-700">Add VAT / Tax</span>
                         </label>
 
                         {vatEnabled && (
-                            <div className="flex items-center gap-2">
-                                <Input
-                                    type="number"
-                                    step="0.1"
-                                    min="0"
-                                    max="100"
-                                    placeholder="e.g. 15"
-                                    value={vatPercent}
-                                    onChange={(e) => setVatPercent(e.target.value)}
-                                    className="w-24 h-8 text-sm"
-                                />
-                                <span className="text-sm text-slate-500">%</span>
+                            <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <select
+                                    value={vatType}
+                                    onChange={(e) => setVatType(e.target.value as "PERCENT" | "AMOUNT")}
+                                    className="h-9 px-2 text-sm rounded-md border border-slate-300 bg-white"
+                                >
+                                    <option value="PERCENT">Percentage (%)</option>
+                                    <option value="AMOUNT">Fixed Amount</option>
+                                </select>
+                                <div className="flex items-center gap-2 flex-1">
+                                    <Input
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder={vatType === "PERCENT" ? "e.g. 15" : "e.g. 20.00"}
+                                        value={vatValue}
+                                        onChange={(e) => setVatValue(e.target.value)}
+                                        className="h-9 w-24 text-sm"
+                                    />
+                                    {vatType === "PERCENT" && <span className="text-sm text-slate-500">%</span>}
+                                </div>
                                 {vatAmount > 0 && (
-                                    <span className="text-xs text-slate-500 ml-2">
+                                    <span className="text-xs font-semibold text-slate-600 bg-white px-2 py-1 rounded shadow-sm border border-slate-200">
                                         VAT: {formatCurrency(vatAmount)}
                                     </span>
                                 )}
@@ -306,14 +324,14 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                     </div>
 
                     {/* Grand total summary */}
-                    <div className="pt-2 border-t border-slate-200">
+                    <div className="pt-3 border-t border-slate-200 space-y-1">
                         <div className="flex justify-between text-sm">
                             <span className="text-slate-600">Subtotal:</span>
                             <span className="font-medium text-slate-900">{formatCurrency(manualSubtotal)}</span>
                         </div>
                         {vatEnabled && vatAmount > 0 && (
                             <div className="flex justify-between text-sm">
-                                <span className="text-slate-600">VAT ({vatRate}%):</span>
+                                <span className="text-slate-600">VAT ({vatType === "PERCENT" ? `${parsedVatValue}%` : 'Amount'}):</span>
                                 <span className="font-medium text-slate-900">{formatCurrency(vatAmount)}</span>
                             </div>
                         )}
@@ -325,11 +343,11 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                 </div>
             )}
 
-            <div>
+            <div className="pt-2">
                 <Button
                     type="submit"
                     disabled={isSubmitting || members.length === 0 || (splitType === "MANUAL" && manualSubtotal <= 0)}
-                    className="w-full sm:w-auto"
+                    className="w-full h-14 sm:h-12 rounded-2xl sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg shadow-lg shadow-blue-500/25 transition-all w-full"
                 >
                     {isSubmitting ? "Adding..." : "Add Expense"}
                 </Button>

@@ -17,7 +17,7 @@ export default function RoomLayout({
     params: { roomId: string };
 }) {
     const { user, loading: authLoading } = useAuth();
-    const { room, members, loading: roomLoading } = useRoomData(params.roomId);
+    const { room, members, availabilities, expenses, expenseParts, loading: roomLoading } = useRoomData(params.roomId);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -43,7 +43,14 @@ export default function RoomLayout({
     return (
         <div className="min-h-screen bg-slate-50">
             <div className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-                <RoomHeader room={room} currentUserId={user.uid} />
+                <RoomHeader
+                    room={room}
+                    currentUserId={user.uid}
+                    members={members}
+                    availabilities={availabilities}
+                    expenses={expenses}
+                    expenseParts={expenseParts}
+                />
 
                 <div className="flex items-center justify-center">
                     <nav className="flex space-x-2 bg-white p-1 rounded-lg border border-slate-200">

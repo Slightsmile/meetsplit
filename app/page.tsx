@@ -70,76 +70,96 @@ export default function Home() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-            <div className="w-full max-w-4xl grid md:grid-cols-2 gap-8 items-center">
+        <main className="min-h-screen bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50 flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden">
+            {/* Ambient glows */}
+            <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
+
+            <div className="w-full max-w-5xl grid md:grid-cols-2 gap-12 items-center relative z-10">
 
                 {/* Hero Section */}
-                <div className="space-y-6">
-                    <h1 className="text-5xl font-extrabold tracking-tight text-slate-900">
-                        Friends meet. <br /><span className="text-blue-600">Bills split.</span>
+                <div className="space-y-8">
+                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
+                        Friends meet. <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-blue-600">Bills split.</span>
                     </h1>
                     <p className="text-lg text-slate-600">
                         The easiest way to find a date that works for everyone and split the trip expenses without the headache.
                     </p>
 
-                    <div className="flex space-x-6 text-slate-500 pt-4">
-                        <div className="flex flex-col items-center"><Users className="w-8 h-8 mb-2 text-blue-500" /><span>No Signup</span></div>
-                        <div className="flex flex-col items-center"><Calendar className="w-8 h-8 mb-2 text-purple-500" /><span>Find Dates</span></div>
-                        <div className="flex flex-col items-center"><Receipt className="w-8 h-8 mb-2 text-green-500" /><span>Split Bills</span></div>
+                    <div className="flex space-x-8 text-slate-600 pt-6">
+                        <div className="flex flex-col items-center group"><div className="p-3 bg-blue-100/50 rounded-2xl mb-3 group-hover:scale-110 transition-transform"><Users className="w-7 h-7 text-blue-600" /></div><span className="text-sm font-medium">No Signup</span></div>
+                        <div className="flex flex-col items-center group"><div className="p-3 bg-purple-100/50 rounded-2xl mb-3 group-hover:scale-110 transition-transform"><Calendar className="w-7 h-7 text-purple-600" /></div><span className="text-sm font-medium">Find Dates</span></div>
+                        <div className="flex flex-col items-center group"><div className="p-3 bg-emerald-100/50 rounded-2xl mb-3 group-hover:scale-110 transition-transform"><Receipt className="w-7 h-7 text-emerald-600" /></div><span className="text-sm font-medium">Split Bills</span></div>
                     </div>
                 </div>
 
                 {/* Action Cards */}
-                <div className="space-y-4">
-                    <Card className="shadow-lg border-0 ring-1 ring-slate-200">
-                        <CardHeader>
-                            <CardTitle>Create a Room</CardTitle>
+                <div className="space-y-6 relative">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-300 to-violet-300 blur-3xl opacity-30 rounded-full -z-10 transform scale-105"></div>
+                    <Card className="shadow-2xl shadow-blue-900/5 border-0 ring-1 ring-white/60 rounded-[2rem] bg-white/80 backdrop-blur-2xl overflow-hidden">
+                        <CardHeader className="bg-white/50 pb-5 pt-8 border-b border-white/50 text-center">
+                            <CardTitle className="text-2xl font-bold text-slate-800">Create a Room</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <form onSubmit={handleCreateRoom} className="space-y-4">
-                                <Input
-                                    placeholder="Your name"
-                                    value={displayName}
-                                    onChange={(e) => setDisplayName(e.target.value)}
-                                    required
-                                />
-                                <Input
-                                    placeholder="Trip to Hawaii, Weekend Dinner..."
-                                    value={roomName}
-                                    onChange={(e) => setRoomName(e.target.value)}
-                                    required
-                                />
-                                <Button type="submit" className="w-full" disabled={isCreating || !displayName.trim()}>
+                        <CardContent className="pt-8 px-6 pb-8">
+                            <form onSubmit={handleCreateRoom} className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-slate-600 ml-1">Your Name</label>
+                                    <Input
+                                        placeholder="e.g. Alex"
+                                        value={displayName}
+                                        onChange={(e) => setDisplayName(e.target.value)}
+                                        className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-slate-600 ml-1">Room Name</label>
+                                    <Input
+                                        placeholder="e.g. Weekend Trip, Friday Dinner..."
+                                        value={roomName}
+                                        onChange={(e) => setRoomName(e.target.value)}
+                                        className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
+                                        required
+                                    />
+                                </div>
+                                <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isCreating || !displayName.trim()}>
                                     {isCreating ? "Creating..." : "Create New Room"}
                                 </Button>
                             </form>
                         </CardContent>
                     </Card>
 
-                    <div className="relative flex py-2 items-center">
-                        <div className="flex-grow border-t border-slate-300"></div>
-                        <span className="flex-shrink-0 mx-4 text-slate-400 text-sm">or</span>
-                        <div className="flex-grow border-t border-slate-300"></div>
+                    <div className="relative flex py-4 items-center">
+                        <div className="flex-grow border-t border-slate-200/60"></div>
+                        <span className="flex-shrink-0 mx-4 text-slate-400 text-sm font-bold tracking-widest uppercase">Or</span>
+                        <div className="flex-grow border-t border-slate-200/60"></div>
                     </div>
 
-                    <Card className="shadow-md border-0 ring-1 ring-slate-200">
-                        <CardContent className="pt-6">
-                            <form onSubmit={handleJoinRoom} className="space-y-4">
-                                <Input
-                                    placeholder="Your name"
-                                    value={joinDisplayName}
-                                    onChange={(e) => setJoinDisplayName(e.target.value)}
-                                    required
-                                />
-                                <Input
-                                    placeholder="Enter 6-digit Room Code"
-                                    value={roomId}
-                                    onChange={(e) => setRoomId(e.target.value)}
-                                    maxLength={6}
-                                    required
-                                    className="uppercase tracking-widest text-center"
-                                />
-                                <Button type="submit" variant="outline" className="w-full" disabled={isJoining || !joinDisplayName.trim()}>
+                    <Card className="shadow-2xl shadow-blue-900/5 border-0 ring-1 ring-white/60 rounded-[2rem] bg-white/80 backdrop-blur-2xl">
+                        <CardContent className="pt-8 px-6 pb-8">
+                            <form onSubmit={handleJoinRoom} className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-slate-600 ml-1">Your Name</label>
+                                    <Input
+                                        placeholder="e.g. Sam"
+                                        value={joinDisplayName}
+                                        onChange={(e) => setJoinDisplayName(e.target.value)}
+                                        className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-slate-600 ml-1">Room Code</label>
+                                    <Input
+                                        placeholder="6-DIGIT CODE"
+                                        value={roomId}
+                                        onChange={(e) => setRoomId(e.target.value)}
+                                        maxLength={6}
+                                        required
+                                        className="h-14 sm:h-12 text-xl sm:text-lg uppercase tracking-[0.25em] font-bold text-center rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:tracking-normal placeholder:font-normal shadow-sm"
+                                    />
+                                </div>
+                                <Button type="submit" variant="outline" className="w-full h-14 rounded-2xl border-slate-200/80 hover:bg-slate-50 font-bold text-lg text-slate-700 transition-colors shadow-sm" disabled={isJoining || !joinDisplayName.trim()}>
                                     {isJoining ? "Joining..." : "Join Existing Room"}
                                 </Button>
                             </form>

@@ -19,7 +19,6 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
     const { user } = useAuth();
     const { room, members, availabilities, expenses, expenseParts } = useRoomData(params.roomId);
     const router = useRouter();
-    const [copied, setCopied] = useState(false);
     const [showMembers, setShowMembers] = useState(false);
 
     // Announcement state
@@ -66,68 +65,6 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
             menu: announcementMenu,
         });
         setIsSavingAnnouncement(false);
-    };
-
-    const buildShareText = () => {
-        let text = `--- ${room.name} Summary ---\n`;
-        text += `Room Code: ${room.roomId}\n`;
-        text += `Members: ${members.map(m => m.displayName).join(", ")}\n\n`;
-
-        if (room.announcement?.notice) {
-            text += `Announcement: ${room.announcement.notice}\n`;
-            if (room.announcement.place) text += `Place: ${room.announcement.place}\n`;
-            if (room.announcement.time) text += `Time: ${room.announcement.time}\n`;
-            if (room.announcement.menu) text += `Menu: ${room.announcement.menu}\n`;
-            text += "\n";
-        }
-
-        if (bestDates.length > 0) {
-            const best = bestDates[0];
-            const isPerfect = best.availableCount === members.length;
-            text += `Best Date: ${format(new Date(best.date), "EEEE, MMMM do, yyyy")}`;
-            text += ` (${best.availableCount}/${members.length} free)`;
-            if (isPerfect) text += " - Perfect match!";
-            text += "\n";
-            if (bestDates.length > 1) {
-                text += "Runner-ups: " + bestDates.slice(1, 4).map(d =>
-                    `${format(new Date(d.date), "MMM do")} (${d.availableCount}/${members.length})`
-                ).join(", ") + "\n";
-            }
-            text += "\n";
-        }
-
-        if (expenses.length > 0) {
-            text += `Total Expenses: ${formatMoney(totalExpenses)}\n`;
-            text += `Per Person (avg): ${formatMoney(perPersonAvg)}\n\n`;
-
-            if (simplifiedDebts.length > 0) {
-                text += "Settlements:\n";
-                simplifiedDebts.forEach(d => {
-                    text += `  ${getMemberName(d.fromUser)} -> ${getMemberName(d.toUser)}: ${formatMoney(d.amount)}\n`;
-                });
-            } else {
-                text += "All settled up!\n";
-            }
-        }
-
-        return text;
-    };
-
-    const handleShare = async () => {
-        const text = buildShareText();
-
-        if (navigator.share) {
-            try {
-                await navigator.share({ title: `${room.name} Summary`, text });
-                return;
-            } catch {
-                // fall through to clipboard
-            }
-        }
-
-        await navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
     };
 
     // ─── Members View (replaces overview content) ───
@@ -177,19 +114,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
 
     // ─── Main Overview ───
     return (
-        <div className="space-y-6">
-            {/* Header with Share */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-xl font-semibold text-slate-900">Overview</h2>
-                    <p className="text-sm text-slate-500 mt-1">Dates, expenses, and settlements at a glance</p>
-                </div>
-                <Button variant="outline" size="sm" onClick={handleShare}>
-                    {copied ? <Check className="w-4 h-4 mr-2 text-green-500" /> : <Share2 className="w-4 h-4 mr-2" />}
-                    {copied ? "Copied!" : "Share"}
-                </Button>
-            </div>
-
+        <div className="space-y-6 sm:space-y-8 max-w-4xl mx-auto pb-24 sm:pb-12 px-4 sm:px-0 pt-4">
             {/* Announcement Section */}
             <Card>
                 <CardHeader className="pb-3">
@@ -269,36 +194,47 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                 </CardContent>
             </Card>
 
-            {/* Stats row — clickable */}
-            <div className="grid grid-cols-3 gap-3">
+            {/* Stats row — horizontally scrollable on mobile */}
+            <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-3 gap-4 sm:gap-6 hide-scrollbar">
                 <Card
-                    className="bg-blue-50 border-blue-100 cursor-pointer hover:shadow-md transition-shadow"
+                    className="flex-shrink-0 w-[240px] sm:w-auto bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400 border-0 ring-1 ring-blue-400/30 cursor-pointer shadow-xl shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40 hover:-translate-y-1 transition-all rounded-[2rem] overflow-hidden group snap-center"
                     onClick={() => setShowMembers(true)}
                 >
-                    <CardContent className="p-4 text-center">
-                        <Users className="w-5 h-5 text-blue-500 mx-auto mb-1" />
-                        <div className="text-2xl font-bold text-slate-900">{members.length}</div>
-                        <div className="text-xs text-slate-500">Members</div>
+                    <CardContent className="p-6 sm:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Users className="w-7 h-7 text-white" />
+                        </div>
+                        <div className="text-4xl sm:text-5xl font-black tracking-tight drop-shadow-sm">{members.length}</div>
+                        <div className="text-xs sm:text-sm font-bold text-blue-50 mt-2 uppercase tracking-widest opacity-90">Members</div>
                     </CardContent>
                 </Card>
                 <Card
-                    className="bg-purple-50 border-purple-100 cursor-pointer hover:shadow-md transition-shadow"
+                    className="flex-shrink-0 w-[240px] sm:w-auto bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 border-0 ring-1 ring-purple-400/30 cursor-pointer shadow-xl shadow-purple-500/20 hover:shadow-2xl hover:shadow-purple-500/40 hover:-translate-y-1 transition-all rounded-[2rem] overflow-hidden group snap-center"
                     onClick={() => router.push(`/r/${params.roomId}/availability`)}
                 >
-                    <CardContent className="p-4 text-center">
-                        <Calendar className="w-5 h-5 text-purple-500 mx-auto mb-1" />
-                        <div className="text-2xl font-bold text-slate-900">{bestDates.length}</div>
-                        <div className="text-xs text-slate-500">Date Options</div>
+                    <CardContent className="p-6 sm:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Calendar className="w-7 h-7 text-white" />
+                        </div>
+                        <div className="text-4xl sm:text-5xl font-black tracking-tight drop-shadow-sm">{bestDates.length}</div>
+                        <div className="text-xs sm:text-sm font-bold text-purple-50 mt-2 uppercase tracking-widest opacity-90">Date Options</div>
                     </CardContent>
                 </Card>
                 <Card
-                    className="bg-green-50 border-green-100 cursor-pointer hover:shadow-md transition-shadow"
+                    className="flex-shrink-0 w-[240px] sm:w-auto bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 border-0 ring-1 ring-emerald-400/30 cursor-pointer shadow-xl shadow-teal-500/20 hover:shadow-2xl hover:shadow-teal-500/40 hover:-translate-y-1 transition-all rounded-[2rem] overflow-hidden group snap-center"
                     onClick={() => router.push(`/r/${params.roomId}/split`)}
                 >
-                    <CardContent className="p-4 text-center">
-                        <Receipt className="w-5 h-5 text-green-500 mx-auto mb-1" />
-                        <div className="text-2xl font-bold text-slate-900">{formatMoney(totalExpenses)}</div>
-                        <div className="text-xs text-slate-500">Total Spent</div>
+                    <CardContent className="p-6 sm:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Receipt className="w-7 h-7 text-white" />
+                        </div>
+                        <div className="text-3xl md:text-2xl lg:text-3xl font-black tracking-tight drop-shadow-sm break-words leading-tight px-1" title={formatMoney(totalExpenses)}>
+                            {formatMoney(totalExpenses)}
+                        </div>
+                        <div className="text-xs sm:text-sm font-bold text-teal-50 mt-2 uppercase tracking-widest opacity-90">Total Spent</div>
                     </CardContent>
                 </Card>
             </div>
@@ -311,31 +247,42 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
 
             {/* Per-person cost */}
             {expenses.length > 0 && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-lg flex items-center gap-2">
-                            <Receipt className="w-5 h-5 text-green-500" />
-                            Per-Person Estimated Cost
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-slate-900 mb-4">{formatMoney(perPersonAvg)}</div>
-                        <div className="space-y-2">
-                            {expenses.map(exp => {
-                                const payer = getMemberName(exp.paidByUserId);
-                                return (
-                                    <div key={exp.expenseId} className="flex justify-between text-sm border-b border-slate-100 pb-2 last:border-0">
-                                        <div>
-                                            <span className="font-medium text-slate-900">{exp.description}</span>
-                                            <span className="text-slate-400 ml-2">paid by {payer}</span>
+                <div className="relative">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-[2rem] blur opacity-50"></div>
+                    <Card className="relative border-0 ring-1 ring-slate-200/50 rounded-3xl bg-white/90 backdrop-blur shadow-xl overflow-hidden">
+                        <div className="h-2 bg-gradient-to-r from-emerald-400 to-teal-400 w-full" />
+                        <CardHeader className="pb-2 pt-6 px-8">
+                            <CardTitle className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <Receipt className="w-5 h-5 text-emerald-500" />
+                                Expense Breakdown
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="px-8 pb-8">
+                            <div className="flex flex-col mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 items-center justify-center text-center">
+                                <span className="text-sm font-medium text-slate-500 mb-1">Average Per Person</span>
+                                <span className="text-4xl font-extrabold text-slate-900 tracking-tight">{formatMoney(perPersonAvg)}</span>
+                            </div>
+
+                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">Recent Expenses</h4>
+                            <div className="space-y-3">
+                                {expenses.map(exp => {
+                                    const payer = getMemberName(exp.paidByUserId);
+                                    return (
+                                        <div key={exp.expenseId} className="flex justify-between items-center p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                                            <div className="flex flex-col">
+                                                <span className="font-semibold text-slate-900">{exp.description}</span>
+                                                <span className="text-xs font-medium text-slate-500 mt-0.5">Paid by {payer}</span>
+                                            </div>
+                                            <span className="font-bold text-slate-900 bg-white shadow-sm px-3 py-1.5 rounded-lg border border-slate-100">
+                                                {formatMoney(exp.totalAmount)}
+                                            </span>
                                         </div>
-                                        <span className="font-medium text-slate-900">{formatMoney(exp.totalAmount)}</span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </CardContent>
-                </Card>
+                                    );
+                                })}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
             )}
 
             {/* Final Balances / Who Owes Whom */}

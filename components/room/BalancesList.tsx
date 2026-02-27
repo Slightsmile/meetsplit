@@ -38,31 +38,31 @@ export function BalancesList({ debts, members, currency }: Props) {
                 const to = getAvatarInfo(debt.toUser);
 
                 return (
-                    <Card key={i} className="overflow-hidden">
+                    <Card key={i} className="overflow-hidden rounded-2xl border-0 ring-1 ring-slate-200 shadow-sm hover:shadow-md transition-shadow bg-white mb-3">
                         <CardContent className="p-4 flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                <div className="w-8 h-8 rounded-full bg-red-100 text-red-700 flex items-center justify-center font-bold text-xs">
+                            <div className="flex items-center space-x-3 w-[30%]">
+                                <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm shadow-sm">
                                     {from.initials}
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-sm font-medium text-slate-900">{from.name}</span>
-                                    <span className="text-xs text-slate-500">owes</span>
+                                    <span className="text-sm font-semibold text-slate-900 truncate">{from.name}</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Owes</span>
                                 </div>
                             </div>
 
-                            <div className="flex items-center space-x-4">
-                                <div className="font-bold text-slate-900">
+                            <div className="flex flex-col items-center justify-center px-2 w-[40%]">
+                                <span className="font-extrabold text-slate-900 text-lg tracking-tight">
                                     {formatMoney(debt.amount)}
-                                </div>
-                                <ArrowRight className="w-4 h-4 text-slate-400" />
+                                </span>
+                                <ArrowRight className="w-4 h-4 text-slate-300 mt-1" />
                             </div>
 
-                            <div className="flex items-center space-x-3">
-                                <div className="flex flex-col text-right">
-                                    <span className="text-sm font-medium text-slate-900">{to.name}</span>
-                                    <span className="text-xs text-slate-500">receives</span>
+                            <div className="flex items-center justify-end space-x-3 w-[30%] text-right">
+                                <div className="flex flex-col items-end">
+                                    <span className="text-sm font-semibold text-slate-900 truncate">{to.name}</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Gets</span>
                                 </div>
-                                <div className="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center font-bold text-xs">
+                                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm shadow-sm">
                                     {to.initials}
                                 </div>
                             </div>
