@@ -18,6 +18,8 @@ export interface RoomData {
     name: string;
     adminId: string;
     isLocked: boolean;
+    isEventMode: boolean;
+    eventDate?: string;
     currency: string;
     announcement?: RoomAnnouncement;
     createdAt: string;

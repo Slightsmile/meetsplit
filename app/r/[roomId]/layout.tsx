@@ -34,11 +34,19 @@ export default function RoomLayout({
 
     if (!room || !user) return null;
 
-    const tabs = [
+    const isAdmin = room.adminId === user.uid;
+    const isEventMode = room.isEventMode ?? false;
+
+    const allTabs = [
         { name: "Overview", href: `/r/${params.roomId}` },
         { name: "Availability", href: `/r/${params.roomId}/availability` },
         { name: "Expenses", href: `/r/${params.roomId}/split` },
     ];
+
+    // In event mode, non-admins only see Overview
+    const tabs = isEventMode && !isAdmin
+        ? allTabs.filter(t => t.name === "Overview")
+        : allTabs;
 
     return (
         <div className="min-h-screen bg-slate-50">

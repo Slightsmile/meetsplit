@@ -6,12 +6,12 @@ import { BestDateCard } from "@/components/room/BestDateCard";
 import { BalancesList } from "@/components/room/BalancesList";
 import { calculateBestDates } from "@/lib/utils/calculateBestDate";
 import { simplifyDebts } from "@/lib/utils/calculateSplit";
-import { updateRoomAnnouncement, removeMember } from "@/lib/firebase/firestore";
+import { updateRoomAnnouncement, removeMember, toggleEventMode, setEventDate } from "@/lib/firebase/firestore";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, ArrowRight, Calendar, Receipt, Users, Share2, Check, Megaphone, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Receipt, Users, Share2, Check, Megaphone, Trash2, PartyPopper } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -28,6 +28,8 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
     const [announcementMenu, setAnnouncementMenu] = useState("");
     const [announcementLoaded, setAnnouncementLoaded] = useState(false);
     const [isSavingAnnouncement, setIsSavingAnnouncement] = useState(false);
+    const [eventDateValue, setEventDateValue] = useState("");
+    const [eventDateLoaded, setEventDateLoaded] = useState(false);
 
     if (!room || !user) return null;
 
@@ -42,7 +44,16 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
         setAnnouncementLoaded(true);
     }
 
+    // Load event date
+    if (!eventDateLoaded && room.eventDate) {
+        setEventDateValue(room.eventDate);
+        setEventDateLoaded(true);
+    } else if (!eventDateLoaded) {
+        setEventDateLoaded(true);
+    }
+
     const isAdmin = room.adminId === user.uid;
+    const isEventMode = room.isEventMode ?? false;
     const memberIds = members.map(m => m.userId);
     const bestDates = calculateBestDates(availabilities, memberIds);
     const simplifiedDebts = simplifyDebts(expenses, expenseParts);
@@ -65,6 +76,15 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
             menu: announcementMenu,
         });
         setIsSavingAnnouncement(false);
+    };
+
+    const handleToggleEventMode = async () => {
+        await toggleEventMode(params.roomId, !isEventMode);
+    };
+
+    const handleSetEventDate = async (date: string) => {
+        setEventDateValue(date);
+        await setEventDate(params.roomId, date);
     };
 
     // ─── Members View (replaces overview content) ───
@@ -194,8 +214,72 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                 </CardContent>
             </Card>
 
+            {/* Event Mode Toggle (admin only) */}
+            {isAdmin && (
+                <Card className={isEventMode ? "border-amber-200 bg-amber-50/50" : ""}>
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <PartyPopper className={`w-5 h-5 ${isEventMode ? "text-amber-600" : "text-slate-400"}`} />
+                            <div>
+                                <p className="font-medium text-slate-900">Event Mode</p>
+                                <p className="text-xs text-slate-500">
+                                    {isEventMode
+                                        ? "Members only see the announcement. You pick the date."
+                                        : "Turn on to hide availability & expenses for members."}
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleToggleEventMode}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isEventMode ? "bg-amber-500" : "bg-slate-300"}`}
+                        >
+                            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isEventMode ? "translate-x-6" : "translate-x-1"}`} />
+                        </button>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Event Date (admin sets, members see) */}
+            {isEventMode && (
+                <Card className="border-purple-200 bg-purple-50/50">
+                    <CardHeader className="pb-3">
+                        <CardTitle className="text-lg flex items-center gap-2">
+                            <Calendar className="w-5 h-5 text-purple-500" />
+                            Event Date
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        {isAdmin ? (
+                            <div className="space-y-2">
+                                <Input
+                                    type="date"
+                                    value={eventDateValue}
+                                    onChange={(e) => handleSetEventDate(e.target.value)}
+                                    className="max-w-xs"
+                                />
+                                {eventDateValue && (
+                                    <p className="text-sm text-purple-700 font-medium">
+                                        {format(new Date(eventDateValue + "T00:00:00"), "EEEE, MMMM do, yyyy")}
+                                    </p>
+                                )}
+                            </div>
+                        ) : (
+                            <div>
+                                {room.eventDate ? (
+                                    <p className="text-lg font-bold text-purple-800">
+                                        {format(new Date(room.eventDate + "T00:00:00"), "EEEE, MMMM do, yyyy")}
+                                    </p>
+                                ) : (
+                                    <p className="text-sm text-slate-400 italic">Admin hasn&apos;t set the date yet.</p>
+                                )}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            )}
+
             {/* Stats row — responsive grid, fits all 3 on mobile */}
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:gap-6">
+            <div className={`grid gap-2 sm:gap-4 lg:gap-6 ${isEventMode && !isAdmin ? "grid-cols-1" : "grid-cols-3"}`}>
                 <Card
                     className="bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400 border-0 ring-1 ring-blue-400/30 cursor-pointer shadow-xl shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
                     onClick={() => setShowMembers(true)}
@@ -209,44 +293,50 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                         <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-blue-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Members</div>
                     </CardContent>
                 </Card>
-                <Card
-                    className="bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 border-0 ring-1 ring-purple-400/30 cursor-pointer shadow-xl shadow-purple-500/20 hover:shadow-2xl hover:shadow-purple-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
-                    onClick={() => router.push(`/r/${params.roomId}/availability`)}
-                >
-                    <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
-                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <Calendar className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
-                        </div>
-                        <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm">{bestDates.length}</div>
-                        <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-purple-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Dates</div>
-                    </CardContent>
-                </Card>
-                <Card
-                    className="bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 border-0 ring-1 ring-emerald-400/30 cursor-pointer shadow-xl shadow-teal-500/20 hover:shadow-2xl hover:shadow-teal-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
-                    onClick={() => router.push(`/r/${params.roomId}/split`)}
-                >
-                    <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
-                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <Receipt className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
-                        </div>
-                        <div className="text-sm sm:text-xl lg:text-3xl font-black tracking-tight drop-shadow-sm break-words leading-tight" title={formatMoney(totalExpenses)}>
-                            {formatMoney(totalExpenses)}
-                        </div>
-                        <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-teal-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Spent</div>
-                    </CardContent>
-                </Card>
+                {!(isEventMode && !isAdmin) && (
+                    <>
+                        <Card
+                            className="bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 border-0 ring-1 ring-purple-400/30 cursor-pointer shadow-xl shadow-purple-500/20 hover:shadow-2xl hover:shadow-purple-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
+                            onClick={() => router.push(`/r/${params.roomId}/availability`)}
+                        >
+                            <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <Calendar className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                                </div>
+                                <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm">{bestDates.length}</div>
+                                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-purple-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Dates</div>
+                            </CardContent>
+                        </Card>
+                        <Card
+                            className="bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 border-0 ring-1 ring-emerald-400/30 cursor-pointer shadow-xl shadow-teal-500/20 hover:shadow-2xl hover:shadow-teal-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
+                            onClick={() => router.push(`/r/${params.roomId}/split`)}
+                        >
+                            <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                                    <Receipt className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                                </div>
+                                <div className="text-sm sm:text-xl lg:text-3xl font-black tracking-tight drop-shadow-sm break-words leading-tight" title={formatMoney(totalExpenses)}>
+                                    {formatMoney(totalExpenses)}
+                                </div>
+                                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-teal-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Spent</div>
+                            </CardContent>
+                        </Card>
+                    </>
+                )}
             </div>
 
-            {/* Best Date */}
-            <section>
-                <h3 className="text-lg font-semibold text-slate-900 mb-3">Best Date</h3>
-                <BestDateCard dates={bestDates} members={members} />
-            </section>
+            {/* Best Date — hidden for non-admin in event mode */}
+            {!(isEventMode && !isAdmin) && (
+                <section>
+                    <h3 className="text-lg font-semibold text-slate-900 mb-3">Best Date</h3>
+                    <BestDateCard dates={bestDates} members={members} />
+                </section>
+            )}
 
-            {/* Per-person cost */}
-            {expenses.length > 0 && (
+            {/* Per-person cost — hidden for non-admin in event mode */}
+            {!(isEventMode && !isAdmin) && expenses.length > 0 && (
                 <div className="relative">
                     <div className="absolute -inset-1 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-[2rem] blur opacity-50"></div>
                     <Card className="relative border-0 ring-1 ring-slate-200/50 rounded-3xl bg-white/90 backdrop-blur shadow-xl overflow-hidden">
@@ -285,11 +375,13 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                 </div>
             )}
 
-            {/* Final Balances / Who Owes Whom */}
-            <section>
-                <h3 className="text-lg font-semibold text-slate-900 mb-3">Who Owes Whom</h3>
-                <BalancesList debts={simplifiedDebts} members={members} currency={room.currency} />
-            </section>
+            {/* Final Balances / Who Owes Whom — hidden for non-admin in event mode */}
+            {!(isEventMode && !isAdmin) && (
+                <section>
+                    <h3 className="text-lg font-semibold text-slate-900 mb-3">Who Owes Whom</h3>
+                    <BalancesList debts={simplifiedDebts} members={members} currency={room.currency} />
+                </section>
+            )}
         </div>
     );
 }

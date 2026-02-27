@@ -2,7 +2,7 @@
 
 import { RoomData, RoomMemberData, UserAvailability, ExpenseData, ExpenseParticipantData } from "@/types/firebase";
 import { Button } from "../ui/button";
-import { Lock, Unlock, Copy, Check, Share2 } from "lucide-react";
+import { Lock, Unlock, Copy, Check, Share2, LinkIcon } from "lucide-react";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
@@ -22,12 +22,19 @@ interface RoomHeaderProps {
 export function RoomHeader({ room, currentUserId, members, availabilities, expenses, expenseParts }: RoomHeaderProps) {
     const [copied, setCopied] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
+    const [inviteCopied, setInviteCopied] = useState(false);
     const isAdmin = room.adminId === currentUserId;
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(`${window.location.origin}/r/${room.roomId}`);
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 2000);
+    };
+
+    const handleCopyInviteLink = () => {
+        navigator.clipboard.writeText(`${window.location.origin}/join/${room.roomId}`);
+        setInviteCopied(true);
+        setTimeout(() => setInviteCopied(false), 2000);
     };
 
     const toggleLock = async () => {
@@ -133,6 +140,10 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
                     <Button variant="ghost" size="sm" onClick={handleCopyLink} className="h-8 px-3 rounded-full text-slate-500 hover:text-slate-800 hover:bg-slate-100">
                         {linkCopied ? <Check className="w-4 h-4 text-green-500 mr-1.5" /> : <Copy className="w-4 h-4 mr-1.5" />}
                         <span className="text-xs font-semibold">{linkCopied ? "Copied" : "Copy Link"}</span>
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={handleCopyInviteLink} className="h-8 px-3 rounded-full text-violet-500 hover:text-violet-800 hover:bg-violet-50">
+                        {inviteCopied ? <Check className="w-4 h-4 text-green-500 mr-1.5" /> : <LinkIcon className="w-4 h-4 mr-1.5" />}
+                        <span className="text-xs font-semibold">{inviteCopied ? "Copied" : "Invite Link"}</span>
                     </Button>
                 </div>
             </div>

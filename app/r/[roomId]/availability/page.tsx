@@ -3,12 +3,25 @@
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useRoomData } from "@/lib/hooks/useRoomData";
 import { AvailabilityCalendar } from "@/components/room/AvailabilityCalendar";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AvailabilityPage({ params }: { params: { roomId: string } }) {
     const { user } = useAuth();
     const { room, availabilities } = useRoomData(params.roomId);
+    const router = useRouter();
+
+    const isEventMode = room?.isEventMode ?? false;
+    const isAdmin = room && user ? room.adminId === user.uid : false;
+
+    useEffect(() => {
+        if (room && user && isEventMode && !isAdmin) {
+            router.replace(`/r/${params.roomId}`);
+        }
+    }, [room, user, isEventMode, isAdmin, router, params.roomId]);
 
     if (!room || !user) return null;
+    if (isEventMode && !isAdmin) return null;
 
     const myAvailability = availabilities.find(a => a.userId === user.uid);
 

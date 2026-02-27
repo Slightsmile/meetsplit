@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useRoomData } from "@/lib/hooks/useRoomData";
 import { ExpenseForm } from "@/components/room/ExpenseForm";
@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Coins } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const CURRENCIES = [
     { code: "BDT", symbol: "৳", label: "BDT (৳)" },
@@ -23,8 +24,19 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
     const { user } = useAuth();
     const { room, members, expenses } = useRoomData(params.roomId);
     const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+    const router = useRouter();
+
+    const isEventMode = room?.isEventMode ?? false;
+    const isAdmin = room && user ? room.adminId === user.uid : false;
+
+    useEffect(() => {
+        if (room && user && isEventMode && !isAdmin) {
+            router.replace(`/r/${params.roomId}`);
+        }
+    }, [room, user, isEventMode, isAdmin, router, params.roomId]);
 
     if (!room || !user) return null;
+    if (isEventMode && !isAdmin) return null;
 
     const handleCurrencyChange = async (currency: string) => {
         await updateRoomCurrency(params.roomId, currency);

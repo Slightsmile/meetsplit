@@ -31,6 +31,16 @@ export async function updateRoomCurrency(roomId: string, currency: string) {
     await updateDoc(roomRef, { currency });
 }
 
+export async function toggleEventMode(roomId: string, isEventMode: boolean) {
+    const roomRef = doc(db, "rooms", roomId);
+    await updateDoc(roomRef, { isEventMode });
+}
+
+export async function setEventDate(roomId: string, eventDate: string) {
+    const roomRef = doc(db, "rooms", roomId);
+    await updateDoc(roomRef, { eventDate });
+}
+
 export async function createRoom(roomId: string, name: string, adminId: string, currency: string = "BDT") {
     const roomRef = doc(db, "rooms", roomId);
     const roomData: RoomData = {
@@ -38,6 +48,7 @@ export async function createRoom(roomId: string, name: string, adminId: string, 
         name,
         adminId,
         isLocked: false,
+        isEventMode: false,
         currency,
         createdAt: new Date().toISOString(),
     };
