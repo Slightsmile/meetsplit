@@ -194,47 +194,47 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                 </CardContent>
             </Card>
 
-            {/* Stats row — horizontally scrollable on mobile */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-3 gap-4 sm:gap-6 hide-scrollbar">
+            {/* Stats row — responsive grid, fits all 3 on mobile */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:gap-6">
                 <Card
-                    className="flex-shrink-0 w-[240px] sm:w-auto bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400 border-0 ring-1 ring-blue-400/30 cursor-pointer shadow-xl shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40 hover:-translate-y-1 transition-all rounded-[2rem] overflow-hidden group snap-center"
+                    className="bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400 border-0 ring-1 ring-blue-400/30 cursor-pointer shadow-xl shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
                     onClick={() => setShowMembers(true)}
                 >
-                    <CardContent className="p-6 sm:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                    <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <Users className="w-7 h-7 text-white" />
+                        <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Users className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                         </div>
-                        <div className="text-4xl sm:text-5xl font-black tracking-tight drop-shadow-sm">{members.length}</div>
-                        <div className="text-xs sm:text-sm font-bold text-blue-50 mt-2 uppercase tracking-widest opacity-90">Members</div>
+                        <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm">{members.length}</div>
+                        <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-blue-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Members</div>
                     </CardContent>
                 </Card>
                 <Card
-                    className="flex-shrink-0 w-[240px] sm:w-auto bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 border-0 ring-1 ring-purple-400/30 cursor-pointer shadow-xl shadow-purple-500/20 hover:shadow-2xl hover:shadow-purple-500/40 hover:-translate-y-1 transition-all rounded-[2rem] overflow-hidden group snap-center"
+                    className="bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 border-0 ring-1 ring-purple-400/30 cursor-pointer shadow-xl shadow-purple-500/20 hover:shadow-2xl hover:shadow-purple-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
                     onClick={() => router.push(`/r/${params.roomId}/availability`)}
                 >
-                    <CardContent className="p-6 sm:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                    <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <Calendar className="w-7 h-7 text-white" />
+                        <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Calendar className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                         </div>
-                        <div className="text-4xl sm:text-5xl font-black tracking-tight drop-shadow-sm">{bestDates.length}</div>
-                        <div className="text-xs sm:text-sm font-bold text-purple-50 mt-2 uppercase tracking-widest opacity-90">Date Options</div>
+                        <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm">{bestDates.length}</div>
+                        <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-purple-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Dates</div>
                     </CardContent>
                 </Card>
                 <Card
-                    className="flex-shrink-0 w-[240px] sm:w-auto bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 border-0 ring-1 ring-emerald-400/30 cursor-pointer shadow-xl shadow-teal-500/20 hover:shadow-2xl hover:shadow-teal-500/40 hover:-translate-y-1 transition-all rounded-[2rem] overflow-hidden group snap-center"
+                    className="bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 border-0 ring-1 ring-emerald-400/30 cursor-pointer shadow-xl shadow-teal-500/20 hover:shadow-2xl hover:shadow-teal-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
                     onClick={() => router.push(`/r/${params.roomId}/split`)}
                 >
-                    <CardContent className="p-6 sm:p-8 text-center text-white relative h-full flex flex-col justify-center">
+                    <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <Receipt className="w-7 h-7 text-white" />
+                        <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-inner flex items-center justify-center mx-auto mb-2 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <Receipt className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                         </div>
-                        <div className="text-3xl md:text-2xl lg:text-3xl font-black tracking-tight drop-shadow-sm break-words leading-tight px-1" title={formatMoney(totalExpenses)}>
+                        <div className="text-sm sm:text-xl lg:text-3xl font-black tracking-tight drop-shadow-sm break-words leading-tight" title={formatMoney(totalExpenses)}>
                             {formatMoney(totalExpenses)}
                         </div>
-                        <div className="text-xs sm:text-sm font-bold text-teal-50 mt-2 uppercase tracking-widest opacity-90">Total Spent</div>
+                        <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-teal-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Spent</div>
                     </CardContent>
                 </Card>
             </div>
@@ -268,12 +268,12 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                                 {expenses.map(exp => {
                                     const payer = getMemberName(exp.paidByUserId);
                                     return (
-                                        <div key={exp.expenseId} className="flex justify-between items-center p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
-                                            <div className="flex flex-col">
-                                                <span className="font-semibold text-slate-900">{exp.description}</span>
-                                                <span className="text-xs font-medium text-slate-500 mt-0.5">Paid by {payer}</span>
+                                        <div key={exp.expenseId} className="flex justify-between items-center gap-2 p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                                            <div className="flex flex-col min-w-0 flex-1">
+                                                <span className="font-semibold text-slate-900 truncate">{exp.description}</span>
+                                                <span className="text-xs font-medium text-slate-500 mt-0.5 truncate">Paid by {payer}</span>
                                             </div>
-                                            <span className="font-bold text-slate-900 bg-white shadow-sm px-3 py-1.5 rounded-lg border border-slate-100">
+                                            <span className="font-bold text-slate-900 bg-white shadow-sm px-2 sm:px-3 py-1.5 rounded-lg border border-slate-100 text-sm sm:text-base whitespace-nowrap shrink-0">
                                                 {formatMoney(exp.totalAmount)}
                                             </span>
                                         </div>
