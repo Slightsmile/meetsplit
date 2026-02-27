@@ -3,7 +3,6 @@
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useRoomData } from "@/lib/hooks/useRoomData";
 import { RoomHeader } from "@/components/room/RoomHeader";
-import { MemberList } from "@/components/room/MemberList";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
@@ -23,10 +22,7 @@ export default function RoomLayout({
     const pathname = usePathname();
 
     useEffect(() => {
-        // If auth loaded and no user, wait for useAuth to create anonymous one
         if (!authLoading && !user) return;
-
-        // If room loaded and doesn't exist, redirect
         if (!roomLoading && !room) {
             router.push("/");
         }
@@ -49,9 +45,7 @@ export default function RoomLayout({
             <div className="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
                 <RoomHeader room={room} currentUserId={user.uid} />
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <MemberList members={members} />
-
+                <div className="flex items-center justify-center">
                     <nav className="flex space-x-2 bg-white p-1 rounded-lg border border-slate-200">
                         {tabs.map((tab) => {
                             const isActive = pathname === tab.href;

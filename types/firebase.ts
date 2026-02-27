@@ -6,12 +6,20 @@ export interface UserData {
     createdAt: string;
 }
 
+export interface RoomAnnouncement {
+    notice: string;
+    place: string;
+    time: string;
+    menu: string;
+}
+
 export interface RoomData {
     roomId: string;
     name: string;
     adminId: string;
     isLocked: boolean;
     currency: string;
+    announcement?: RoomAnnouncement;
     createdAt: string;
 }
 

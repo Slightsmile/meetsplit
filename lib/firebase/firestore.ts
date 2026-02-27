@@ -21,7 +21,17 @@ import {
     ExpenseParticipantData
 } from "@/types/firebase";
 
-export async function createRoom(roomId: string, name: string, adminId: string, currency: string = "USD") {
+export async function updateRoomAnnouncement(roomId: string, announcement: { notice: string; place: string; time: string; menu: string }) {
+    const roomRef = doc(db, "rooms", roomId);
+    await updateDoc(roomRef, { announcement });
+}
+
+export async function updateRoomCurrency(roomId: string, currency: string) {
+    const roomRef = doc(db, "rooms", roomId);
+    await updateDoc(roomRef, { currency });
+}
+
+export async function createRoom(roomId: string, name: string, adminId: string, currency: string = "BDT") {
     const roomRef = doc(db, "rooms", roomId);
     const roomData: RoomData = {
         roomId,
@@ -48,7 +58,41 @@ export async function joinRoom(roomId: string, userId: string, displayName: stri
     if (!room) throw new Error("ROOM_NOT_FOUND");
     if (room.isLocked) throw new Error("ROOM_LOCKED");
 
+    // Check if this user already has a membership (same uid)
     const memberRef = doc(db, "roomMembers", `${roomId}_${userId}`);
+    const existingMember = await getDoc(memberRef);
+    if (existingMember.exists()) {
+        // Update display name if changed, but don't create duplicate
+        await updateDoc(memberRef, { displayName });
+        return existingMember.data() as RoomMemberData;
+    }
+
+    // Check if a member with the same display name already exists in this room
+    const membersQuery = query(
+        collection(db, "roomMembers"),
+        where("roomId", "==", roomId),
+        where("displayName", "==", displayName)
+    );
+    const existingByName = await getDocs(membersQuery);
+    if (!existingByName.empty) {
+        // Same name already exists — merge this user into the existing membership
+        const existingDoc = existingByName.docs[0];
+        await updateDoc(existingDoc.ref, { userId });
+        // Also create the new key so future lookups work
+        const memberData: RoomMemberData = {
+            roomId,
+            userId,
+            displayName,
+            joinedAt: existingDoc.data().joinedAt
+        };
+        await setDoc(memberRef, memberData);
+        // Delete old document if key differs
+        if (existingDoc.id !== `${roomId}_${userId}`) {
+            await deleteDoc(existingDoc.ref);
+        }
+        return memberData;
+    }
+
     const memberData: RoomMemberData = {
         roomId,
         userId,
@@ -84,6 +128,18 @@ export async function updateAvailability(
     };
 
     await setDoc(availRef, availData, { merge: true });
+}
+
+export async function removeMember(roomId: string, userId: string) {
+    const memberRef = doc(db, "roomMembers", `${roomId}_${userId}`);
+    await deleteDoc(memberRef);
+
+    // Also remove their availability
+    const availRef = doc(db, "availability", `${roomId}_${userId}`);
+    const availSnap = await getDoc(availRef);
+    if (availSnap.exists()) {
+        await deleteDoc(availRef);
+    }
 }
 
 export async function addExpense(
