@@ -66,7 +66,12 @@ export default function Home() {
     };
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50">
+                <div className="w-10 h-10 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin" />
+                <p className="text-sm text-slate-500 animate-pulse">Loading...</p>
+            </div>
+        );
     }
 
     return (
@@ -159,7 +164,7 @@ export default function Home() {
                                         className="h-14 sm:h-12 text-xl sm:text-lg uppercase tracking-[0.25em] font-bold text-center rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:tracking-normal placeholder:font-normal shadow-sm"
                                     />
                                 </div>
-                                <Button type="submit" variant="outline" className="w-full h-14 rounded-2xl border-slate-200/80 hover:bg-slate-50 font-bold text-lg text-slate-700 transition-colors shadow-sm" disabled={isJoining || !joinDisplayName.trim()}>
+                                <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isJoining || !joinDisplayName.trim()}>
                                     {isJoining ? "Joining..." : "Join Existing Room"}
                                 </Button>
                             </form>

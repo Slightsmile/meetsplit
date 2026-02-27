@@ -148,27 +148,6 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                 />
             </div>
 
-            {/* Paid by selector */}
-            <div>
-                <label className="text-sm font-semibold text-slate-700 mb-1.5 block">Who paid?</label>
-                <div className="relative">
-                    <select
-                        value={paidBy}
-                        onChange={(e) => setPaidBy(e.target.value)}
-                        className="w-full h-14 sm:h-12 rounded-xl sm:rounded-lg border border-slate-200 bg-slate-50 px-4 text-base text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors appearance-none"
-                    >
-                        {members.map(m => (
-                            <option key={m.userId} value={m.userId}>
-                                {m.displayName}{m.userId === currentUserId ? " (You)" : ""}
-                            </option>
-                        ))}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-                    </div>
-                </div>
-            </div>
-
             {/* Split type toggle */}
             <div>
                 <label className="text-sm font-semibold text-slate-700 mb-2 block">Split method</label>
@@ -347,7 +326,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                 <Button
                     type="submit"
                     disabled={isSubmitting || members.length === 0 || (splitType === "MANUAL" && manualSubtotal <= 0)}
-                    className="w-full h-14 sm:h-12 rounded-2xl sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg shadow-lg shadow-blue-500/25 transition-all w-full"
+                    className="w-full h-14 sm:h-12 rounded-2xl sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg shadow-lg shadow-blue-500/25 transition-all"
                 >
                     {isSubmitting ? "Adding..." : "Add Expense"}
                 </Button>

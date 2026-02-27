@@ -59,8 +59,9 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
 
     if (authLoading || roomLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50">
-                <p className="text-slate-500">Loading...</p>
+            <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50">
+                <div className="w-10 h-10 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin" />
+                <p className="text-sm text-slate-500 animate-pulse">Loading...</p>
             </div>
         );
     }
@@ -102,10 +103,10 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
                         )}
                     </div>
                     <CardTitle className="text-2xl font-bold text-slate-800">
-                        Join {room.name}
+                        Welcome to {room.name}
                     </CardTitle>
                     <p className="text-sm text-slate-500 mt-2">
-                        Room Code: <span className="font-mono font-bold tracking-widest">{roomCode}</span>
+                        Enter your name to join this room
                     </p>
                     {room.isEventMode && (
                         <span className="inline-flex items-center gap-1 mt-2 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
