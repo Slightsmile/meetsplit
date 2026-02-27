@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
+import { HelpToggle } from "@/components/room/HelpToggle";
 
 export default function RoomLayout({
     children,
@@ -86,6 +87,8 @@ export default function RoomLayout({
                     {children}
                 </main>
             </div>
+
+            <HelpToggle />
         </div>
     );
 }

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useRoomData } from "@/lib/hooks/useRoomData";
 import { ExpenseForm } from "@/components/room/ExpenseForm";
+import { PaymentMethod } from "@/components/room/PaymentMethod";
 import { updateRoomCurrency } from "@/lib/firebase/firestore";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
@@ -42,6 +43,8 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
         await updateRoomCurrency(params.roomId, currency);
         setShowCurrencyPicker(false);
     };
+
+    const totalExpenses = expenses.reduce((sum, e) => sum + e.totalAmount, 0);
 
     return (
         <div className="space-y-8">
@@ -104,6 +107,17 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
                     </div>
                 )}
             </section>
+
+            {/* Payment Method section - appears after expenses */}
+            {expenses.length > 0 && (
+                <section>
+                    <PaymentMethod
+                        totalAmount={totalExpenses}
+                        members={members}
+                        currency={room.currency}
+                    />
+                </section>
+            )}
         </div>
     );
 }
