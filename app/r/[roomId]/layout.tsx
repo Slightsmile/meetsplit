@@ -53,7 +53,7 @@ export default function RoomLayout({
     if (authLoading || roomLoading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50">
-                <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+                <div className="w-10 h-10 border-4 border-split-200 border-t-split-600 rounded-full animate-spin" />
                 <p className="text-sm text-slate-500 animate-pulse">Loading room...</p>
             </div>
         );
@@ -94,7 +94,7 @@ export default function RoomLayout({
 
                 {viewAsGuest && (
                     <div className="flex items-center justify-center">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-violet-50 text-violet-700 rounded-full text-xs font-semibold border border-violet-200">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-meet-50 text-meet-700 rounded-full text-xs font-semibold border border-meet-200">
                             <Eye className="w-3.5 h-3.5" />
                             Viewing as Guest
                         </div>

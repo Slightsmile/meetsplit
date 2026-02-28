@@ -115,7 +115,7 @@ export function HelpToggle({ currentPage = "overview" }: HelpToggleProps) {
                     variant="default"
                     size="icon"
                     onClick={() => setOpen(!open)}
-                    className="w-12 h-12 rounded-full shadow-lg shadow-blue-500/30 bg-blue-600 hover:bg-blue-700 text-white"
+                    className="w-12 h-12 rounded-full shadow-lg shadow-split-500/30 bg-split-600 hover:bg-split-700 text-white"
                     aria-label={open ? "Close help" : "Open help"}
                     aria-expanded={open}
                 >
@@ -158,8 +158,8 @@ export function HelpToggle({ currentPage = "overview" }: HelpToggleProps) {
 
                             <div className="space-y-3">
                                 {items.map((item, i) => (
-                                    <div key={i} className={i === 0 ? "" : "pl-3 border-l-2 border-blue-200"}>
-                                        <h4 className="text-sm font-semibold text-blue-600 mb-1">
+                                    <div key={i} className={i === 0 ? "" : "pl-3 border-l-2 border-split-200"}>
+                                        <h4 className="text-sm font-semibold text-split-600 mb-1">
                                             {item.title}
                                         </h4>
                                         <p className="text-sm text-slate-600 leading-relaxed">

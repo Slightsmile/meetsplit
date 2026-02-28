@@ -105,7 +105,7 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
                         variant="default"
                         size="sm"
                         onClick={handleShareClick}
-                        className="h-9 rounded-xl shadow-md shadow-blue-500/25 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all text-xs sm:text-sm px-3 sm:px-5"
+                        className="h-9 rounded-xl shadow-md shadow-blue-500/25 bg-gradient-to-r from-[#004b7f] to-[#017e8c] hover:opacity-90 text-white font-semibold transition-all text-xs sm:text-sm px-3 sm:px-5 border-0"
                     >
                         <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5" />
                         Share

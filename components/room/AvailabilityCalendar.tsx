@@ -129,19 +129,19 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                             }}
                             className={`relative flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${isSelected
                                 ? isActive
-                                    ? "bg-blue-700 border-blue-700 text-white shadow-lg ring-2 ring-blue-300"
-                                    : "bg-blue-600 border-blue-600 text-white shadow-md hover:bg-blue-700"
-                                : "bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50"
+                                    ? "bg-meet-700 border-meet-700 text-white shadow-lg ring-2 ring-meet-300"
+                                    : "bg-meet-600 border-meet-600 text-white shadow-md hover:bg-meet-700"
+                                : "bg-white border-slate-200 text-slate-700 hover:border-meet-300 hover:bg-meet-50"
                                 }`}
                         >
-                            <span className={`text-xs font-medium ${isSelected ? 'text-blue-100' : 'text-slate-500'}`}>
+                            <span className={`text-xs font-medium ${isSelected ? 'text-meet-100' : 'text-slate-500'}`}>
                                 {format(day, "EEE")}
                             </span>
                             <span className={`text-xl font-bold mt-1 ${isSelected ? 'text-white' : 'text-slate-900'}`}>
                                 {format(day, "d")}
                             </span>
                             {isToday && (
-                                <span className={`text-[10px] mt-1 ${isSelected ? 'text-blue-200' : 'text-blue-600 font-medium'}`}>
+                                <span className={`text-[10px] mt-1 ${isSelected ? 'text-meet-200' : 'text-meet-600 font-medium'}`}>
                                     Today
                                 </span>
                             )}
@@ -154,12 +154,12 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
             </div>
 
             {/* Time picker — always shown */}
-            <div className="p-4 rounded-xl border border-blue-100 bg-white shadow-sm space-y-4">
+            <div className="p-4 rounded-xl border border-meet-100 bg-white shadow-sm space-y-4">
                 {activeDate && selectedDates.has(activeDate) ? (
                     <>
                         <div className="flex items-center justify-between">
                             <h4 className="text-sm font-semibold text-slate-800">
-                                <Clock className="w-4 h-4 inline mr-1 text-blue-500" />
+                                <Clock className="w-4 h-4 inline mr-1 text-meet-500" />
                                 Set time for {format(new Date(activeDate), "MMM do")}
                                 <span className="text-xs font-normal text-slate-500 ml-2">(optional)</span>
                             </h4>
@@ -173,14 +173,14 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                             <span className="text-xs text-slate-500">Format:</span>
                             <button
                                 onClick={() => setUse24h(false)}
-                                className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${!use24h ? "bg-blue-600 text-white border-blue-600 shadow-sm" : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                                className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${!use24h ? "bg-meet-600 text-white border-meet-600 shadow-sm" : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
                                     }`}
                             >
                                 12h
                             </button>
                             <button
                                 onClick={() => setUse24h(true)}
-                                className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${use24h ? "bg-blue-600 text-white border-blue-600 shadow-sm" : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                                className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${use24h ? "bg-meet-600 text-white border-meet-600 shadow-sm" : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
                                     }`}
                             >
                                 24h
@@ -194,7 +194,7 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                                     <select
                                         value={picker24Hour}
                                         onChange={(e) => setPicker24Hour(Number(e.target.value))}
-                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 shadow-sm"
+                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-meet-500 shadow-sm"
                                     >
                                         {Array.from({ length: 24 }, (_, i) => (
                                             <option key={i} value={i}>{String(i).padStart(2, "0")}</option>
@@ -204,7 +204,7 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                                     <select
                                         value={pickerMinute}
                                         onChange={(e) => setPickerMinute(e.target.value)}
-                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 shadow-sm"
+                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-meet-500 shadow-sm"
                                     >
                                         {MINUTES.map(m => (
                                             <option key={m} value={m}>{m}</option>
@@ -216,7 +216,7 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                                     <select
                                         value={pickerHour}
                                         onChange={(e) => setPickerHour(Number(e.target.value))}
-                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 shadow-sm"
+                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-meet-500 shadow-sm"
                                     >
                                         {HOURS_12.map(h => (
                                             <option key={h} value={h}>{h}</option>
@@ -226,7 +226,7 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                                     <select
                                         value={pickerMinute}
                                         onChange={(e) => setPickerMinute(e.target.value)}
-                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 shadow-sm"
+                                        className="rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 focus:ring-2 focus:ring-meet-500 shadow-sm"
                                     >
                                         {MINUTES.map(m => (
                                             <option key={m} value={m}>{m}</option>
@@ -235,14 +235,14 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                                     <div className="flex border border-slate-300 rounded-md overflow-hidden ml-1 shadow-sm">
                                         <button
                                             onClick={() => setPickerPeriod("AM")}
-                                            className={`px-3 py-1.5 text-xs font-semibold transition-colors ${pickerPeriod === "AM" ? "bg-blue-600 text-white" : "bg-white text-slate-600 hover:bg-slate-50"
+                                            className={`px-3 py-1.5 text-xs font-semibold transition-colors ${pickerPeriod === "AM" ? "bg-meet-600 text-white" : "bg-white text-slate-600 hover:bg-slate-50"
                                                 }`}
                                         >
                                             AM
                                         </button>
                                         <button
                                             onClick={() => setPickerPeriod("PM")}
-                                            className={`px-3 py-1.5 text-xs font-semibold transition-colors border-l border-slate-300 ${pickerPeriod === "PM" ? "bg-blue-600 text-white" : "bg-white text-slate-600 hover:bg-slate-50"
+                                            className={`px-3 py-1.5 text-xs font-semibold transition-colors border-l border-slate-300 ${pickerPeriod === "PM" ? "bg-meet-600 text-white" : "bg-white text-slate-600 hover:bg-slate-50"
                                                 }`}
                                         >
                                             PM
@@ -259,12 +259,12 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                         {(timeSlots[activeDate]?.length ?? 0) > 0 && (
                             <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100 mt-2">
                                 {timeSlots[activeDate].map(slot => (
-                                    <span key={slot} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold shadow-sm border border-blue-200">
+                                    <span key={slot} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-meet-100 text-meet-700 rounded-full text-xs font-semibold shadow-sm border border-meet-200">
                                         <Clock className="w-3.5 h-3.5" />
                                         {slot}
                                         <button
                                             onClick={() => removeTimeSlot(activeDate, slot)}
-                                            className="ml-1 hover:text-blue-900 focus:outline-none"
+                                            className="ml-1 hover:text-meet-900 focus:outline-none"
                                         >
                                             <X className="w-3.5 h-3.5" />
                                         </button>

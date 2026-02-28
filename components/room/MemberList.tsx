@@ -9,7 +9,7 @@ export function MemberList({ members }: { members: RoomMemberData[] }) {
             {members.map((m) => (
                 <div
                     key={m.userId}
-                    className="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-xs"
+                    className="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-split-100 flex items-center justify-center text-split-700 font-semibold text-xs"
                     title={m.displayName}
                 >
                     {m.displayName.substring(0, 2).toUpperCase()}

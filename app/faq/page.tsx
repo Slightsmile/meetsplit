@@ -55,9 +55,9 @@ export default function FAQPage() {
     ];
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50 p-4 sm:p-8 relative overflow-hidden">
+        <main className="min-h-screen bg-gradient-to-br from-meet-100 via-sky-50 to-emerald-50 p-4 sm:p-8 relative overflow-hidden">
             {/* Ambient glows */}
-            <div className="fixed top-0 right-0 -m-32 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
+            <div className="fixed top-0 right-0 -m-32 w-96 h-96 bg-meet-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
             <div className="fixed bottom-0 left-0 -m-32 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
 
             <div className="max-w-3xl mx-auto relative z-10">
@@ -69,7 +69,7 @@ export default function FAQPage() {
                 </div>
 
                 <div className="text-center mb-12">
-                    <div className="inline-flex items-center justify-center p-4 bg-violet-100 rounded-full mb-6 text-violet-600 shadow-inner">
+                    <div className="inline-flex items-center justify-center p-4 bg-meet-100 rounded-full mb-6 text-meet-600 shadow-inner">
                         <HelpCircle className="w-10 h-10" />
                     </div>
                     <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
@@ -82,7 +82,7 @@ export default function FAQPage() {
 
                 <div className="space-y-4 pb-12">
                     {faqs.map((faq, index) => (
-                        <Card key={index} className="border-0 ring-1 ring-slate-200/50 rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl shadow-blue-900/5 hover:-translate-y-1 transition-transform duration-300">
+                        <Card key={index} className="border-0 ring-1 ring-slate-200/50 rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl shadow-meet-900/5 hover:-translate-y-1 transition-transform duration-300">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-lg font-bold text-slate-800">
                                     {faq.question}

@@ -173,7 +173,7 @@ export function PaymentMethod({
         <Card className="overflow-hidden">
             <CardHeader className="pb-4">
                 <CardTitle className="text-lg flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-blue-500" />
+                    <CreditCard className="w-5 h-5 text-split-500" />
                     Payment Method
                 </CardTitle>
             </CardHeader>
@@ -205,7 +205,7 @@ export function PaymentMethod({
                             aria-checked={mode === "each"}
                             onClick={() => handleModeSwitch("each")}
                             className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${mode === "each"
-                                    ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
+                                    ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
                                     : "text-slate-500 hover:text-slate-700"
                                 }`}
                         >
@@ -217,7 +217,7 @@ export function PaymentMethod({
                             aria-checked={mode === "manual"}
                             onClick={() => handleModeSwitch("manual")}
                             className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${mode === "manual"
-                                    ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
+                                    ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
                                     : "text-slate-500 hover:text-slate-700"
                                 }`}
                         >
@@ -312,7 +312,7 @@ export function PaymentMethod({
                                         <div
                                             key={member.userId}
                                             className={`p-3 rounded-xl border transition-colors ${isSelected
-                                                    ? "bg-blue-50 border-blue-200"
+                                                    ? "bg-split-50 border-split-200"
                                                     : "bg-white border-slate-200"
                                                 }`}
                                         >
@@ -333,7 +333,7 @@ export function PaymentMethod({
                                                 >
                                                     <div
                                                         className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm ${isSelected
-                                                                ? "bg-blue-200 text-blue-800"
+                                                                ? "bg-split-200 text-split-800"
                                                                 : "bg-slate-100 text-slate-600"
                                                             }`}
                                                     >
@@ -345,7 +345,7 @@ export function PaymentMethod({
                                                 </div>
                                                 <div
                                                     className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors cursor-pointer ${isSelected
-                                                            ? "bg-blue-500 border-blue-500"
+                                                            ? "bg-split-500 border-split-500"
                                                             : "border-slate-300"
                                                         }`}
                                                     onClick={() => togglePayer(member.userId)}
@@ -484,7 +484,7 @@ export function PaymentMethod({
                         }
                         className={`w-full h-12 rounded-2xl font-semibold text-base transition-all ${finalized
                                 ? "bg-emerald-600 hover:bg-emerald-600"
-                                : "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25"
+                                : "bg-split-600 hover:bg-split-700 shadow-lg shadow-split-500/25"
                             }`}
                     >
                         {finalized ? (

@@ -68,7 +68,7 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
                                 <button
                                     key={c.code}
                                     onClick={() => handleCurrencyChange(c.code)}
-                                    className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 transition-colors ${room.currency === c.code ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700"
+                                    className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 transition-colors ${room.currency === c.code ? "bg-split-50 text-split-700 font-medium" : "text-slate-700"
                                         }`}
                                 >
                                     {c.label}

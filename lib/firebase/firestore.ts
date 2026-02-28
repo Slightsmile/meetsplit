@@ -119,6 +119,31 @@ export async function joinRoom(roomId: string, userId: string, displayName: stri
                 await setDoc(newAvailRef, { ...availData, userId });
                 await deleteDoc(oldAvailRef);
             }
+
+            // If the old user was the room admin, transfer admin to the new UID
+            if (room.adminId === oldUserId) {
+                await updateDoc(doc(db, "rooms", roomId), { adminId: userId });
+            }
+
+            // Migrate expense participant records
+            const expPartsQuery = query(
+                collection(db, "expenseParticipants"),
+                where("roomId", "==", roomId),
+                where("userId", "==", oldUserId)
+            );
+            const expPartsSnap = await getDocs(expPartsQuery);
+            for (const epDoc of expPartsSnap.docs) {
+                await updateDoc(epDoc.ref, { userId });
+            }
+
+            // Migrate room payment records
+            const oldPayRef = doc(db, "roomPayments", `${roomId}_${oldUserId}`);
+            const oldPaySnap = await getDoc(oldPayRef);
+            if (oldPaySnap.exists()) {
+                const newPayRef = doc(db, "roomPayments", `${roomId}_${userId}`);
+                await setDoc(newPayRef, { ...oldPaySnap.data(), userId });
+                await deleteDoc(oldPayRef);
+            }
         }
         return memberData;
     }

@@ -102,7 +102,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                 <div className="space-y-3">
                     {members.map(m => (
                         <div key={m.userId} className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 bg-slate-50">
-                            <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                            <div className="w-10 h-10 rounded-full bg-split-100 text-split-700 flex items-center justify-center font-bold text-sm">
                                 {m.displayName.substring(0, 2).toUpperCase()}
                             </div>
                             <div className="flex-1">
@@ -195,7 +195,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                                         <p className="text-sm text-slate-600">
                                             <span className="text-slate-400">Place:</span>{" "}
                                             {room.announcement.place.startsWith("http") ? (
-                                                <a href={room.announcement.place} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                                                <a href={room.announcement.place} target="_blank" rel="noopener noreferrer" className="text-split-600 underline">
                                                     {room.announcement.place}
                                                 </a>
                                             ) : room.announcement.place}
@@ -283,7 +283,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
             {/* Stats row — responsive grid, fits all 3 on mobile */}
             <div className={`grid gap-2 sm:gap-4 lg:gap-6 ${isEventMode && !isAdmin ? "grid-cols-1" : "grid-cols-3"}`}>
                 <Card
-                    className="bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400 border-0 ring-1 ring-blue-400/30 cursor-pointer shadow-xl shadow-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
+                    className="bg-gradient-to-br from-indigo-500 via-split-500 to-cyan-400 border-0 ring-1 ring-split-400/30 cursor-pointer shadow-xl shadow-split-500/20 hover:shadow-2xl hover:shadow-split-500/40 hover:-translate-y-1 transition-all rounded-2xl sm:rounded-[2rem] overflow-hidden group"
                     onClick={() => setShowMembers(true)}
                 >
                     <CardContent className="p-3 sm:p-6 lg:p-8 text-center text-white relative h-full flex flex-col justify-center">
@@ -292,7 +292,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                             <Users className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                         </div>
                         <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm">{members.length}</div>
-                        <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-blue-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Members</div>
+                        <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-split-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Members</div>
                     </CardContent>
                 </Card>
                 {!(isEventMode && !isAdmin) && (

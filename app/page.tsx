@@ -86,8 +86,13 @@ export default function Home() {
 
                     {/* Hero Section */}
                     <div className="space-y-8">
+                        <div className="flex items-center gap-3 md:gap-4 mb-2">
+                            <img src="/logo.png" alt="MeetSplit Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain" />
+                            <img src="/Logo Text.png" alt="MeetSplit" className="h-6 md:h-8 object-contain" />
+                        </div>
                         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
-                            Friends meet. <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-blue-600">Bills split.</span>
+                            Friends <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#09d6ba] to-[#017e8c]">meet.</span> <br />
+                            Bills <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#004b7f] to-[#1b9ae0]">split.</span>
                         </h1>
                         <p className="text-lg text-slate-600">
                             The easiest way to find a date that works for everyone and split the trip expenses without the headache.
@@ -129,7 +134,7 @@ export default function Home() {
                                             required
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isCreating || !displayName.trim()}>
+                                    <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-[#004b7f] to-[#1b9ae0] hover:from-[#004b7f] hover:to-[#1b9ae0] hover:opacity-90 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isCreating || !displayName.trim()}>
                                         {isCreating ? "Creating..." : "Create New Room"}
                                     </Button>
                                 </form>
@@ -166,7 +171,7 @@ export default function Home() {
                                             className="h-14 sm:h-12 text-xl sm:text-lg uppercase tracking-[0.25em] font-bold text-center rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:tracking-normal placeholder:font-normal shadow-sm"
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isJoining || !joinDisplayName.trim()}>
+                                    <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-[#09d6ba] to-[#017e8c] hover:from-[#09d6ba] hover:to-[#017e8c] hover:opacity-90 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isJoining || !joinDisplayName.trim()}>
                                         {isJoining ? "Joining..." : "Join Existing Room"}
                                     </Button>
                                 </form>

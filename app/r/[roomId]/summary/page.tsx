@@ -103,9 +103,9 @@ export default function SummaryPage({ params }: { params: { roomId: string } }) 
 
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                <Card className="bg-blue-50 border-blue-100">
+                <Card className="bg-split-50 border-split-100">
                     <CardContent className="p-3 sm:p-4 text-center">
-                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 mx-auto mb-1" />
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-split-500 mx-auto mb-1" />
                         <div className="text-xl sm:text-2xl font-bold text-slate-900">{members.length}</div>
                         <div className="text-[10px] sm:text-xs text-slate-500">Members</div>
                     </CardContent>
@@ -228,7 +228,7 @@ export default function SummaryPage({ params }: { params: { roomId: string } }) 
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
-                        <Users className="w-5 h-5 text-blue-500" />
+                        <Users className="w-5 h-5 text-split-500" />
                         Members
                     </CardTitle>
                 </CardHeader>
@@ -236,7 +236,7 @@ export default function SummaryPage({ params }: { params: { roomId: string } }) 
                     <div className="flex flex-wrap gap-2">
                         {members.map(m => (
                             <div key={m.userId} className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-200">
-                                <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[10px]">
+                                <div className="w-6 h-6 rounded-full bg-split-100 text-split-700 flex items-center justify-center font-bold text-[10px]">
                                     {m.displayName.substring(0, 2).toUpperCase()}
                                 </div>
                                 <span className="text-sm text-slate-700">{m.displayName}</span>

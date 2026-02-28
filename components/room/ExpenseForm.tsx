@@ -153,7 +153,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                         type="button"
                         onClick={() => setSplitType("EQUAL")}
                         className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${splitType === "EQUAL"
-                            ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
+                            ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
                             : "text-slate-500 hover:text-slate-700"
                             }`}
                     >
@@ -163,7 +163,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                         type="button"
                         onClick={() => setSplitType("MANUAL")}
                         className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${splitType === "MANUAL"
-                            ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
+                            ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
                             : "text-slate-500 hover:text-slate-700"
                             }`}
                     >
@@ -188,9 +188,9 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                         />
                     </div>
                     {totalAmount > 0 && (
-                        <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100">
+                        <div className="p-4 rounded-xl bg-split-50/50 border border-split-100">
                             <p className="text-sm sm:text-base text-slate-700">
-                                Each person pays: <span className="font-black text-blue-700 ml-1">{formatCurrencyVal(equalShare)}</span>
+                                Each person pays: <span className="font-black text-split-700 ml-1">{formatCurrencyVal(equalShare)}</span>
                                 <span className="text-xs font-semibold text-slate-400 block sm:inline sm:ml-2 mt-1 sm:mt-0">({members.length} members)</span>
                             </p>
                         </div>
@@ -247,7 +247,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                                 <button
                                     type="button"
                                     onClick={() => addItem(m.userId)}
-                                    className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium"
+                                    className="flex items-center gap-1 text-xs text-split-600 hover:text-split-800 font-medium"
                                 >
                                     <Plus className="w-3 h-3" />
                                     Add item
@@ -263,7 +263,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                                 type="checkbox"
                                 checked={vatEnabled}
                                 onChange={(e) => setVatEnabled(e.target.checked)}
-                                className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                className="rounded border-slate-300 text-split-600 focus:ring-split-500"
                             />
                             <span className="text-sm font-medium text-slate-700">Add VAT / Tax</span>
                         </label>
@@ -323,7 +323,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                 <Button
                     type="submit"
                     disabled={isSubmitting || members.length === 0 || (splitType === "MANUAL" && manualSubtotal <= 0)}
-                    className="w-full h-14 sm:h-12 rounded-2xl sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg shadow-lg shadow-blue-500/25 transition-all"
+                    className="w-full h-14 sm:h-12 rounded-2xl sm:rounded-xl bg-gradient-to-r from-split-600 to-indigo-600 hover:from-split-700 hover:to-indigo-700 text-white font-bold text-lg shadow-lg shadow-split-500/25 transition-all"
                 >
                     {isSubmitting ? "Adding..." : "Add Expense"}
                 </Button>

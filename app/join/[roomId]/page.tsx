@@ -67,8 +67,8 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
 
     if (authLoading || roomLoading) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50">
-                <div className="w-10 h-10 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin" />
+            <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-meet-light/10 via-sky-50 to-split-light/10">
+                <div className="w-10 h-10 border-4 border-meet-200 border-t-meet-600 rounded-full animate-spin" />
                 <p className="text-sm text-slate-500 animate-pulse">Loading...</p>
             </div>
         );
@@ -76,7 +76,7 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
 
     if (!room) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50 p-4">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-meet-light/10 via-sky-50 to-split-light/10 p-4">
                 <Card className="max-w-md w-full shadow-2xl border-0 ring-1 ring-white/60 rounded-[2rem] bg-white/80 backdrop-blur-2xl">
                     <CardContent className="p-8 text-center space-y-4">
                         <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
@@ -96,14 +96,14 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
     }
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50 flex items-center justify-center p-4 relative overflow-hidden">
+        <main className="min-h-screen bg-gradient-to-br from-meet-light/10 via-sky-50 to-split-light/10 flex items-center justify-center p-4 relative overflow-hidden">
             {/* Ambient glows */}
-            <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl mix-blend-multiply pointer-events-none" />
+            <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-split-400/20 rounded-full blur-3xl mix-blend-multiply pointer-events-none" />
             <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply pointer-events-none" />
 
             <Card className="max-w-md w-full shadow-2xl border-0 ring-1 ring-white/60 rounded-[2rem] bg-white/80 backdrop-blur-2xl relative z-10">
                 <CardHeader className="bg-white/50 pb-5 pt-8 border-b border-white/50 text-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-violet-500/25">
+                    <div className="w-16 h-16 bg-gradient-to-br from-meet-500 to-split-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-meet-500/25">
                         {room.isEventMode ? (
                             <PartyPopper className="w-8 h-8 text-white" />
                         ) : (
@@ -130,7 +130,7 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
                                 placeholder="Enter your name to join"
                                 value={displayName}
                                 onChange={(e) => setDisplayName(e.target.value)}
-                                className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
+                                className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-meet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
                                 required
                                 autoFocus
                             />
@@ -140,7 +140,7 @@ export default function JoinByLinkPage({ params }: { params: { roomId: string } 
                         )}
                         <Button
                             type="submit"
-                            className="w-full h-14 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5"
+                            className="w-full h-14 rounded-2xl bg-gradient-to-r from-meet-600 to-split-600 hover:from-meet-700 hover:to-split-700 text-white font-bold text-lg shadow-xl shadow-split-500/25 transition-all hover:-translate-y-0.5"
                             disabled={isJoining || !displayName.trim()}
                         >
                             {isJoining ? "Joining..." : "Join Room"}
