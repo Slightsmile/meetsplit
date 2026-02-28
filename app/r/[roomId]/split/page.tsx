@@ -56,7 +56,7 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
         <div className="space-y-8">
             {/* Currency Picker */}
             <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-slate-900">Expenses</h2>
+                <h2 className="text-xl font-semibold text-slate-900">Split</h2>
                 {canEdit && <div className="relative">
                     <Button variant="outline" size="sm" onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}>
                         <Coins className="w-4 h-4 mr-1" />

@@ -13,7 +13,7 @@ const helpContent: Record<string, { title: string; description: string }[]> = {
         {
             title: "Room Overview",
             description:
-                "This is your room dashboard. You can see a quick summary of members, best dates, and expenses at a glance.",
+                "This is your room dashboard. You can see a quick summary of members, best dates, and split totals at a glance.",
         },
         {
             title: "Members",
@@ -28,17 +28,27 @@ const helpContent: Record<string, { title: string; description: string }[]> = {
         {
             title: "Event Mode",
             description:
-                "Toggle event mode to restrict non-admin members from seeing Availability and Expenses tabs. Useful for finalized events.",
+                "Toggle event mode to restrict non-admin members from seeing Meet and Split tabs. Useful for finalized events.",
         },
         {
             title: "Share & Invite",
             description:
                 "Use the Share button in the header to send the invite link. The Copy button copies the room URL to your clipboard.",
         },
+        {
+            title: "Session Recovery",
+            description:
+                "Lost your session? Go to the home page and enter your original name + room code. You'll be merged back into your previous identity with all your data intact.",
+        },
+        {
+            title: "Auto-Cleanup",
+            description:
+                "Rooms and anonymous users older than 30 days are automatically deleted to keep things tidy.",
+        },
     ],
     availability: [
         {
-            title: "Select Your Dates",
+            title: "Meet — Select Your Dates",
             description:
                 "Tap on calendar dates when you're available. Selected dates are highlighted. Tap again to deselect.",
         },
@@ -55,7 +65,7 @@ const helpContent: Record<string, { title: string; description: string }[]> = {
     ],
     expenses: [
         {
-            title: "Add an Expense",
+            title: "Split — Add an Expense",
             description:
                 "Enter a description, choose equal or manual split, and add the amount. The expense is automatically split among all members.",
         },
@@ -72,7 +82,7 @@ const helpContent: Record<string, { title: string; description: string }[]> = {
         {
             title: "Currency",
             description:
-                "Change the currency using the currency button at the top of the Expenses page. Supports BDT, USD, EUR, GBP, INR, and JPY.",
+                "Change the currency using the currency button at the top of the Split page. Supports BDT, USD, EUR, GBP, INR, and JPY.",
         },
         {
             title: "Payment Method",

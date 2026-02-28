@@ -83,10 +83,9 @@ export async function joinRoom(roomId: string, userId: string, displayName: stri
         return existingMember.data() as RoomMemberData;
     }
 
-    // Only check lock for NEW members
-    if (room.isLocked) throw new Error("ROOM_LOCKED");
-
     // Check if a member with the same display name already exists in this room
+    // This allows session recovery: a returning user with a new anonymous UID
+    // re-enters their name + room code and gets merged back into their original identity
     const membersQuery = query(
         collection(db, "roomMembers"),
         where("roomId", "==", roomId),
@@ -96,6 +95,7 @@ export async function joinRoom(roomId: string, userId: string, displayName: stri
     if (!existingByName.empty) {
         // Same name already exists — merge this user into the existing membership
         const existingDoc = existingByName.docs[0];
+        const oldUserId = existingDoc.data().userId;
         await updateDoc(existingDoc.ref, { userId });
         // Also create the new key so future lookups work
         const memberData: RoomMemberData = {
@@ -109,8 +109,22 @@ export async function joinRoom(roomId: string, userId: string, displayName: stri
         if (existingDoc.id !== `${roomId}_${userId}`) {
             await deleteDoc(existingDoc.ref);
         }
+        // Migrate availability data from old userId to new userId
+        if (oldUserId !== userId) {
+            const oldAvailRef = doc(db, "availability", `${roomId}_${oldUserId}`);
+            const oldAvailSnap = await getDoc(oldAvailRef);
+            if (oldAvailSnap.exists()) {
+                const newAvailRef = doc(db, "availability", `${roomId}_${userId}`);
+                const availData = oldAvailSnap.data() as UserAvailability;
+                await setDoc(newAvailRef, { ...availData, userId });
+                await deleteDoc(oldAvailRef);
+            }
+        }
         return memberData;
     }
+
+    // Only check lock for genuinely NEW members (not returning users)
+    if (room.isLocked) throw new Error("ROOM_LOCKED");
 
     const memberData: RoomMemberData = {
         roomId,

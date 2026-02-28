@@ -55,8 +55,8 @@ export default function RoomLayout({
 
     const allTabs = [
         { name: "Overview", href: `/r/${params.roomId}` },
-        { name: "Availability", href: `/r/${params.roomId}/availability` },
-        { name: "Expenses", href: `/r/${params.roomId}/split` },
+        { name: "Meet", href: `/r/${params.roomId}/availability` },
+        { name: "Split", href: `/r/${params.roomId}/split` },
     ];
 
     // In event mode, non-admins (or admin in guest view) only see Overview

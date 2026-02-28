@@ -6,32 +6,52 @@ export default function FAQPage() {
     const faqs = [
         {
             question: "What is MeetSplit?",
-            answer: "MeetSplit is the easiest way to find a date that works for everyone and split trip expenses without the headache. It requires no signup and uses anonymous sessions."
+            answer: "MeetSplit is the easiest way to find a date that works for everyone and split trip expenses without the headache. No signup required — it uses anonymous, device-based sessions."
         },
         {
             question: "How do I create or join a room?",
-            answer: "To create a room, just enter your name and the room's name on the home page. You'll get a 6-digit code to share with friends. They can join by entering that code on the home page."
+            answer: "To create a room, enter your name and a room name on the home page. You'll get a 6-digit code to share with friends. They can join by entering that code along with their name."
         },
         {
-            question: "How do we find the best date?",
-            answer: "In the room, click on 'Dates' to add your availability. MeetSplit automatically highlights the date(s) that work for the most people in your group."
+            question: "What are the Meet and Split tabs?",
+            answer: "Meet is the availability tab — pick calendar dates when you're free and the app finds the best overlap. Split is for expenses — add bills, choose equal or manual split, and track who paid."
+        },
+        {
+            question: "How does the Meet tab work?",
+            answer: "Open the Meet tab and tap on dates you're available. MeetSplit automatically highlights the date(s) that work for the most people in your group. Use arrows to navigate between months."
         },
         {
             question: "How does expense splitting work?",
-            answer: "Click on 'Spent' to add an expense. Enter who paid and who was involved. The app automatically calculates a simplified 'Who Owes Whom' summary so everyone can settle up easily."
+            answer: "In the Split tab, add an expense with a description and amount. Choose equal split (divided evenly) or manual split (individual items per person). You can also add VAT/tax. The app calculates who owes whom."
+        },
+        {
+            question: "What currencies are supported?",
+            answer: "MeetSplit supports BDT (৳), USD ($), EUR (€), GBP (£), INR (₹), and JPY (¥). Change the currency using the button at the top of the Split tab."
         },
         {
             question: "What is Event Mode?",
-            answer: "Admins can turn on Event Mode to hide availability and expenses boards from members. Members will only see the final event date and any announcements."
+            answer: "Admins can turn on Event Mode to hide the Meet and Split tabs from regular members. Members will only see the Overview with the final event date and any announcements."
         },
         {
-            question: "Do I need an account to use MeetSplit?",
-            answer: "No signup required! We use anonymous device-based sessions. Keep in mind that clearing your browser data or using incognito mode might result in losing access to your created rooms."
+            question: "Do I need an account?",
+            answer: "No signup required! MeetSplit uses anonymous device-based sessions. Your identity is tied to your browser — no email or password needed."
+        },
+        {
+            question: "What if I lose my session?",
+            answer: "If you clear your browser data or switch devices, go to the home page and enter your original name along with the room code. MeetSplit will match you back to your previous identity with all your data (availability, expenses) intact."
         },
         {
             question: "Who can edit room settings?",
-            answer: "The person who creates the room is the Admin. The Admin can lock the room, remove members, toggle Event Mode, and set the final Event Date."
-        }
+            answer: "The person who creates the room is the Admin. The Admin can lock the room, remove members, toggle Event Mode, set the final Event Date, and post announcements."
+        },
+        {
+            question: "How long do rooms last?",
+            answer: "Rooms and anonymous user accounts are automatically deleted after 30 days of inactivity to keep things clean. Make sure to finalize your plans before then!"
+        },
+        {
+            question: "How do I track payments?",
+            answer: "After adding expenses in the Split tab, use the Payment Method section at the bottom. Choose 'Each' mode for equal shares, or 'Manual Payment' to enter exact amounts each person paid."
+        },
     ];
 
     return (
