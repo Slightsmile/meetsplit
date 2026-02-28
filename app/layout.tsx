@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description: "Find a date that works for everyone and split trip expenses without the headache.",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.png",
   },
 };
 

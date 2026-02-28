@@ -205,8 +205,8 @@ export function PaymentMethod({
                             aria-checked={mode === "each"}
                             onClick={() => handleModeSwitch("each")}
                             className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${mode === "each"
-                                    ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
-                                    : "text-slate-500 hover:text-slate-700"
+                                ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
+                                : "text-slate-500 hover:text-slate-700"
                                 }`}
                         >
                             Each
@@ -217,8 +217,8 @@ export function PaymentMethod({
                             aria-checked={mode === "manual"}
                             onClick={() => handleModeSwitch("manual")}
                             className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${mode === "manual"
-                                    ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
-                                    : "text-slate-500 hover:text-slate-700"
+                                ? "bg-white text-split-600 shadow-sm ring-1 ring-slate-200/50"
+                                : "text-slate-500 hover:text-slate-700"
                                 }`}
                         >
                             Manual Payment
@@ -241,8 +241,8 @@ export function PaymentMethod({
                                     <div
                                         key={member.userId}
                                         className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${member.hasPaid
-                                                ? "bg-emerald-50 border-emerald-200"
-                                                : "bg-white border-slate-200 hover:border-slate-300"
+                                            ? "bg-emerald-50 border-emerald-200"
+                                            : "bg-white border-slate-200 hover:border-slate-300"
                                             }`}
                                         onClick={() => togglePaid(member.userId)}
                                         onKeyDown={(e) => {
@@ -259,8 +259,8 @@ export function PaymentMethod({
                                         <div className="flex items-center gap-3">
                                             <div
                                                 className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm ${member.hasPaid
-                                                        ? "bg-emerald-200 text-emerald-800"
-                                                        : "bg-slate-100 text-slate-600"
+                                                    ? "bg-emerald-200 text-emerald-800"
+                                                    : "bg-slate-100 text-slate-600"
                                                     }`}
                                             >
                                                 {getInitials(member.userId)}
@@ -276,8 +276,8 @@ export function PaymentMethod({
                                         </div>
                                         <div
                                             className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${member.hasPaid
-                                                    ? "bg-emerald-500 border-emerald-500"
-                                                    : "border-slate-300"
+                                                ? "bg-emerald-500 border-emerald-500"
+                                                : "border-slate-300"
                                                 }`}
                                         >
                                             {member.hasPaid && (
@@ -312,8 +312,8 @@ export function PaymentMethod({
                                         <div
                                             key={member.userId}
                                             className={`p-3 rounded-xl border transition-colors ${isSelected
-                                                    ? "bg-split-50 border-split-200"
-                                                    : "bg-white border-slate-200"
+                                                ? "bg-split-50 border-split-200"
+                                                : "bg-white border-slate-200"
                                                 }`}
                                         >
                                             <div className="flex items-center justify-between">
@@ -333,8 +333,8 @@ export function PaymentMethod({
                                                 >
                                                     <div
                                                         className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm ${isSelected
-                                                                ? "bg-split-200 text-split-800"
-                                                                : "bg-slate-100 text-slate-600"
+                                                            ? "bg-split-200 text-split-800"
+                                                            : "bg-slate-100 text-slate-600"
                                                             }`}
                                                     >
                                                         {getInitials(member.userId)}
@@ -345,8 +345,8 @@ export function PaymentMethod({
                                                 </div>
                                                 <div
                                                     className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors cursor-pointer ${isSelected
-                                                            ? "bg-split-500 border-split-500"
-                                                            : "border-slate-300"
+                                                        ? "bg-split-500 border-split-500"
+                                                        : "border-slate-300"
                                                         }`}
                                                     onClick={() => togglePayer(member.userId)}
                                                 >
@@ -374,8 +374,8 @@ export function PaymentMethod({
                                                             )
                                                         }
                                                         className={`h-10 rounded-lg ${amountError
-                                                                ? "border-red-300 focus:ring-red-500"
-                                                                : ""
+                                                            ? "border-red-300 focus:ring-red-500"
+                                                            : ""
                                                             }`}
                                                         aria-label={`Amount paid by ${member.displayName}`}
                                                     />
@@ -396,8 +396,8 @@ export function PaymentMethod({
                         {selectedPayers.size > 0 && (
                             <div
                                 className={`p-3 rounded-xl border flex items-start gap-2 ${manualResult.isValid
-                                        ? "bg-emerald-50 border-emerald-200"
-                                        : "bg-amber-50 border-amber-200"
+                                    ? "bg-emerald-50 border-emerald-200"
+                                    : "bg-amber-50 border-amber-200"
                                     }`}
                             >
                                 {manualResult.isValid ? (
@@ -408,8 +408,8 @@ export function PaymentMethod({
                                 <div>
                                     <p
                                         className={`text-sm font-medium ${manualResult.isValid
-                                                ? "text-emerald-700"
-                                                : "text-amber-700"
+                                            ? "text-emerald-700"
+                                            : "text-amber-700"
                                             }`}
                                     >
                                         {manualResult.isValid
@@ -482,9 +482,9 @@ export function PaymentMethod({
                             (mode === "manual" && !manualResult.isValid) ||
                             (mode === "manual" && selectedPayers.size === 0)
                         }
-                        className={`w-full h-12 rounded-2xl font-semibold text-base transition-all ${finalized
-                                ? "bg-emerald-600 hover:bg-emerald-600"
-                                : "bg-split-600 hover:bg-split-700 shadow-lg shadow-split-500/25"
+                        className={`w-full h-12 rounded-2xl font-semibold text-base transition-all border-0 ${finalized
+                            ? "bg-emerald-600 hover:bg-emerald-600 text-white"
+                            : "bg-gradient-to-r from-[#004b7f] to-[#1b9ae0] hover:opacity-90 text-white shadow-lg shadow-blue-500/25"
                             }`}
                     >
                         {finalized ? (

@@ -182,7 +182,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                                     onChange={(e) => setAnnouncementMenu(e.target.value)}
                                 />
                             </div>
-                            <Button size="sm" onClick={handleSaveAnnouncement} disabled={isSavingAnnouncement}>
+                            <Button size="sm" onClick={handleSaveAnnouncement} disabled={isSavingAnnouncement} className="bg-gradient-to-r from-[#004b7f] to-[#1b9ae0] hover:opacity-90 text-white border-0 shadow-md shadow-blue-500/20">
                                 {isSavingAnnouncement ? "Saving..." : "Save Announcement"}
                             </Button>
                         </div>

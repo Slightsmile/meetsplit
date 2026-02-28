@@ -129,8 +129,8 @@ export function AvailabilityCalendar({ roomId, userId, myAvailability }: Props) 
                             }}
                             className={`relative flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${isSelected
                                 ? isActive
-                                    ? "bg-meet-700 border-meet-700 text-white shadow-lg ring-2 ring-meet-300"
-                                    : "bg-meet-600 border-meet-600 text-white shadow-md hover:bg-meet-700"
+                                    ? "bg-gradient-to-br from-[#09d6ba] to-[#017e8c] border-transparent text-white shadow-lg ring-2 ring-teal-300"
+                                    : "bg-meet-500 border-meet-500 text-white shadow-md hover:opacity-90"
                                 : "bg-white border-slate-200 text-slate-700 hover:border-meet-300 hover:bg-meet-50"
                                 }`}
                         >

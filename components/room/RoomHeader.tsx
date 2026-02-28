@@ -68,9 +68,8 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
             <div className="flex justify-between gap-4">
                 {/* Left: Branding + Room name + admin icons */}
                 <div className="flex flex-col min-w-0 flex-1">
-                    <a href="/" className="text-xs font-bold text-violet-600 tracking-wider uppercase hover:text-violet-700 transition-colors w-fit mb-1 flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-violet-600"></span>
-                        MeetSplit
+                    <a href="/" className="w-fit mb-1 flex items-center hover:opacity-90 transition-opacity">
+                        <img src="/Logo Text.png" alt="MeetSplit" className="h-4 object-contain" />
                     </a>
                     <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight break-words">
                         {room.name}

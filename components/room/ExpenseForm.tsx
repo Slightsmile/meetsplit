@@ -323,7 +323,7 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
                 <Button
                     type="submit"
                     disabled={isSubmitting || members.length === 0 || (splitType === "MANUAL" && manualSubtotal <= 0)}
-                    className="w-full h-14 sm:h-12 rounded-2xl sm:rounded-xl bg-gradient-to-r from-split-600 to-indigo-600 hover:from-split-700 hover:to-indigo-700 text-white font-bold text-lg shadow-lg shadow-split-500/25 transition-all"
+                    className="w-full h-14 sm:h-12 rounded-2xl sm:rounded-xl bg-gradient-to-r from-[#004b7f] to-[#1b9ae0] hover:opacity-90 text-white font-bold text-lg shadow-lg shadow-blue-500/25 transition-all border-0"
                 >
                     {isSubmitting ? "Adding..." : "Add Expense"}
                 </Button>
