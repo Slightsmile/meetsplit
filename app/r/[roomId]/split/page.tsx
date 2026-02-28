@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useRoomData } from "@/lib/hooks/useRoomData";
 import { ExpenseForm } from "@/components/room/ExpenseForm";
 import { PaymentMethod } from "@/components/room/PaymentMethod";
-import { updateRoomCurrency } from "@/lib/firebase/firestore";
+import { updateRoomCurrency, updateRoomPayments } from "@/lib/firebase/firestore";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ const CURRENCIES = [
 
 export default function SplitPage({ params }: { params: { roomId: string } }) {
     const { user } = useAuth();
-    const { room, members, expenses } = useRoomData(params.roomId);
+    const { room, members, expenses, roomPayments } = useRoomData(params.roomId);
     const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
     const router = useRouter();
 
@@ -44,6 +44,12 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
         setShowCurrencyPicker(false);
     };
 
+    const handleFinalizePayments = async (payments: { userId: string, paidAmount: number }[]) => {
+        await updateRoomPayments(params.roomId, payments);
+    };
+
+    const canEdit = isAdmin || !room.isLocked;
+
     const totalExpenses = expenses.reduce((sum, e) => sum + e.totalAmount, 0);
 
     return (
@@ -51,7 +57,7 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
             {/* Currency Picker */}
             <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-slate-900">Expenses</h2>
-                <div className="relative">
+                {canEdit && <div className="relative">
                     <Button variant="outline" size="sm" onClick={() => setShowCurrencyPicker(!showCurrencyPicker)}>
                         <Coins className="w-4 h-4 mr-1" />
                         {room.currency}
@@ -62,21 +68,22 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
                                 <button
                                     key={c.code}
                                     onClick={() => handleCurrencyChange(c.code)}
-                                    className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 transition-colors ${
-                                        room.currency === c.code ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700"
-                                    }`}
+                                    className={`w-full text-left px-3 py-2 text-sm hover:bg-slate-50 transition-colors ${room.currency === c.code ? "bg-blue-50 text-blue-700 font-medium" : "text-slate-700"
+                                        }`}
                                 >
                                     {c.label}
                                 </button>
                             ))}
                         </div>
                     )}
-                </div>
+                </div>}
             </div>
 
-            <section>
-                <ExpenseForm roomId={room.roomId} members={members} currentUserId={user.uid} currency={room.currency} />
-            </section>
+            {canEdit && (
+                <section>
+                    <ExpenseForm roomId={room.roomId} members={members} currentUserId={user.uid} currency={room.currency} />
+                </section>
+            )}
 
             <section>
                 <h3 className="font-semibold text-slate-900 mb-4">Expense History</h3>
@@ -95,7 +102,7 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
                                     <CardContent className="p-4 flex justify-between items-center">
                                         <div>
                                             <p className="font-medium text-slate-900">{exp.description}</p>
-                                            <p className="text-xs text-slate-500">Paid by {payer} on {date}</p>
+                                            <p className="text-xs text-slate-500">{date}</p>
                                         </div>
                                         <div className="font-bold text-slate-900">
                                             {new Intl.NumberFormat('en-US', { style: 'currency', currency: room.currency }).format(exp.totalAmount)}
@@ -109,14 +116,22 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
             </section>
 
             {/* Payment Method section - appears after expenses */}
-            {expenses.length > 0 && (
+            {canEdit && expenses.length > 0 && (
                 <section>
                     <PaymentMethod
+                        roomId={room.roomId}
                         totalAmount={totalExpenses}
                         members={members}
                         currency={room.currency}
+                        initialPayments={roomPayments}
+                        onFinalize={handleFinalizePayments}
                     />
                 </section>
+            )}
+            {!canEdit && expenses.length > 0 && (
+                <div className="text-center py-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <p className="text-sm text-slate-500">Only the room admin can modify expenses and payments because the room is locked.</p>
+                </div>
             )}
         </div>
     );

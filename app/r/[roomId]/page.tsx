@@ -19,7 +19,7 @@ import { useViewAsGuest } from "@/lib/hooks/useViewAsGuest";
 
 export default function RoomOverview({ params }: { params: { roomId: string } }) {
     const { user } = useAuth();
-    const { room, members, availabilities, expenses, expenseParts } = useRoomData(params.roomId);
+    const { room, members, availabilities, expenses, expenseParts, roomPayments } = useRoomData(params.roomId);
     const router = useRouter();
     const [showMembers, setShowMembers] = useState(false);
     const { viewAsGuest } = useViewAsGuest();
@@ -59,7 +59,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
     const isEventMode = room.isEventMode ?? false;
     const memberIds = members.map(m => m.userId);
     const bestDates = calculateBestDates(availabilities, memberIds);
-    const simplifiedDebts = simplifyDebts(expenses, expenseParts);
+    const simplifiedDebts = simplifyDebts(expenses, expenseParts, roomPayments);
 
     const totalExpenses = expenses.reduce((sum, e) => sum + e.totalAmount, 0);
     const perPersonAvg = members.length > 0 ? totalExpenses / members.length : 0;
@@ -307,7 +307,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                                     <Calendar className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                                 </div>
                                 <div className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm">{bestDates.length}</div>
-                                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-purple-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Dates</div>
+                                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-purple-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Meet</div>
                             </CardContent>
                         </Card>
                         <Card
@@ -322,7 +322,7 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                                 <div className="text-lg sm:text-2xl lg:text-4xl font-black tracking-tight drop-shadow-sm" title={formatMoney(totalExpenses)}>
                                     {formatMoney(totalExpenses)}
                                 </div>
-                                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-teal-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Spent</div>
+                                <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-teal-50 mt-1 sm:mt-2 uppercase tracking-wider sm:tracking-widest opacity-90">Split</div>
                             </CardContent>
                         </Card>
                     </>
@@ -358,12 +358,10 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">Recent Expenses</h4>
                             <div className="space-y-3">
                                 {expenses.map(exp => {
-                                    const payer = getMemberName(exp.paidByUserId);
                                     return (
                                         <div key={exp.expenseId} className="flex justify-between items-center gap-2 p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
                                             <div className="flex flex-col min-w-0 flex-1">
                                                 <span className="font-semibold text-slate-900 truncate">{exp.description}</span>
-                                                <span className="text-xs font-medium text-slate-500 mt-0.5 truncate">Paid by {payer}</span>
                                             </div>
                                             <span className="font-bold text-slate-900 bg-white shadow-sm px-2 sm:px-3 py-1.5 rounded-lg border border-slate-100 text-sm sm:text-base whitespace-nowrap shrink-0">
                                                 {formatMoney(exp.totalAmount)}

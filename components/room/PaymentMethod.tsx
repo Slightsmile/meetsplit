@@ -18,21 +18,20 @@ import { SimplifiedDebt } from "@/lib/utils/calculateSplit";
 import { Check, AlertCircle, ArrowRight, CreditCard, CheckCircle2 } from "lucide-react";
 
 interface PaymentMethodProps {
+    roomId: string;
     totalAmount: number;
     members: RoomMemberData[];
     currency: string;
-    onFinalize?: (data: {
-        mode: PaymentMode;
-        paidMembers: string[];
-        manualPayers: PayerEntry[];
-        debts: SimplifiedDebt[];
-    }) => void;
+    initialPayments: import("@/types/firebase").RoomPaymentData[];
+    onFinalize: (payments: { userId: string, paidAmount: number }[]) => Promise<void>;
 }
 
 export function PaymentMethod({
+    roomId,
     totalAmount,
     members,
     currency,
+    initialPayments,
     onFinalize,
 }: PaymentMethodProps) {
     const [mode, setMode] = useState<PaymentMode>("each");
@@ -46,6 +45,34 @@ export function PaymentMethod({
         (amount: number) => formatCurrencyUtil(amount, currency),
         [currency]
     );
+
+    const [isSaving, setIsSaving] = useState(false);
+
+    // Initialize from existing payments
+    useEffect(() => {
+        // If there are initial payments that sum to something > 0
+        const totalPaid = initialPayments.reduce((sum, p) => sum + p.paidAmount, 0);
+
+        if (totalPaid > 0) {
+            setMode("manual");
+            const newSelected = new Set<string>();
+            const newAmounts: Record<string, string> = {};
+
+            initialPayments.forEach(p => {
+                if (p.paidAmount > 0) {
+                    newSelected.add(p.userId);
+                    newAmounts[p.userId] = p.paidAmount.toString();
+                }
+            });
+
+            setSelectedPayers(newSelected);
+            setManualAmounts(newAmounts);
+        } else {
+            setMode("each");
+            // By default no one has paid in "each" mode
+            setPaidMembers(new Set());
+        }
+    }, [initialPayments]);
 
     // Sync manual payers from selected payers and amounts
     useEffect(() => {
@@ -104,15 +131,33 @@ export function PaymentMethod({
     const manualResult = calculateManualPayment(totalAmount, members, manualPayers);
     const manualDebts = calculateManualDebts(totalAmount, members, manualPayers);
 
-    const handleFinalize = () => {
+    const handleFinalize = async () => {
         if (mode === "manual" && !manualResult.isValid) return;
-        setFinalized(true);
-        onFinalize?.({
-            mode,
-            paidMembers: Array.from(paidMembers),
-            manualPayers,
-            debts: mode === "each" ? [] : manualDebts,
-        });
+
+        setIsSaving(true);
+        let finalPayments: { userId: string, paidAmount: number }[] = [];
+
+        if (mode === "each") {
+            finalPayments = members.map(m => ({
+                userId: m.userId,
+                paidAmount: paidMembers.has(m.userId) ? perPerson : 0
+            }));
+        } else {
+            finalPayments = members.map(m => ({
+                userId: m.userId,
+                paidAmount: manualPayers.find(p => p.userId === m.userId)?.amount || 0
+            }));
+        }
+
+        try {
+            await onFinalize(finalPayments);
+            setFinalized(true);
+            setTimeout(() => setFinalized(false), 2000); // Reset UI after 2s
+        } catch (error) {
+            // Error handling could go here
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleModeSwitch = (newMode: PaymentMode) => {
@@ -159,11 +204,10 @@ export function PaymentMethod({
                             role="radio"
                             aria-checked={mode === "each"}
                             onClick={() => handleModeSwitch("each")}
-                            className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${
-                                mode === "each"
+                            className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${mode === "each"
                                     ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
                                     : "text-slate-500 hover:text-slate-700"
-                            }`}
+                                }`}
                         >
                             Each
                         </button>
@@ -172,11 +216,10 @@ export function PaymentMethod({
                             role="radio"
                             aria-checked={mode === "manual"}
                             onClick={() => handleModeSwitch("manual")}
-                            className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${
-                                mode === "manual"
+                            className={`flex-1 px-4 py-3 sm:py-2.5 rounded-xl sm:rounded-lg text-sm sm:text-base font-bold transition-all duration-200 ${mode === "manual"
                                     ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50"
                                     : "text-slate-500 hover:text-slate-700"
-                            }`}
+                                }`}
                         >
                             Manual Payment
                         </button>
@@ -197,11 +240,10 @@ export function PaymentMethod({
                                 {eachPaymentList.map((member) => (
                                     <div
                                         key={member.userId}
-                                        className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${
-                                            member.hasPaid
+                                        className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${member.hasPaid
                                                 ? "bg-emerald-50 border-emerald-200"
                                                 : "bg-white border-slate-200 hover:border-slate-300"
-                                        }`}
+                                            }`}
                                         onClick={() => togglePaid(member.userId)}
                                         onKeyDown={(e) => {
                                             if (e.key === "Enter" || e.key === " ") {
@@ -216,11 +258,10 @@ export function PaymentMethod({
                                     >
                                         <div className="flex items-center gap-3">
                                             <div
-                                                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm ${
-                                                    member.hasPaid
+                                                className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm ${member.hasPaid
                                                         ? "bg-emerald-200 text-emerald-800"
                                                         : "bg-slate-100 text-slate-600"
-                                                }`}
+                                                    }`}
                                             >
                                                 {getInitials(member.userId)}
                                             </div>
@@ -234,11 +275,10 @@ export function PaymentMethod({
                                             </div>
                                         </div>
                                         <div
-                                            className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
-                                                member.hasPaid
+                                            className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${member.hasPaid
                                                     ? "bg-emerald-500 border-emerald-500"
                                                     : "border-slate-300"
-                                            }`}
+                                                }`}
                                         >
                                             {member.hasPaid && (
                                                 <Check className="w-4 h-4 text-white" />
@@ -271,11 +311,10 @@ export function PaymentMethod({
                                     return (
                                         <div
                                             key={member.userId}
-                                            className={`p-3 rounded-xl border transition-colors ${
-                                                isSelected
+                                            className={`p-3 rounded-xl border transition-colors ${isSelected
                                                     ? "bg-blue-50 border-blue-200"
                                                     : "bg-white border-slate-200"
-                                            }`}
+                                                }`}
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div
@@ -293,11 +332,10 @@ export function PaymentMethod({
                                                     aria-label={`Select ${member.displayName} as payer`}
                                                 >
                                                     <div
-                                                        className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm ${
-                                                            isSelected
+                                                        className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm ${isSelected
                                                                 ? "bg-blue-200 text-blue-800"
                                                                 : "bg-slate-100 text-slate-600"
-                                                        }`}
+                                                            }`}
                                                     >
                                                         {getInitials(member.userId)}
                                                     </div>
@@ -306,11 +344,10 @@ export function PaymentMethod({
                                                     </span>
                                                 </div>
                                                 <div
-                                                    className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors cursor-pointer ${
-                                                        isSelected
+                                                    className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors cursor-pointer ${isSelected
                                                             ? "bg-blue-500 border-blue-500"
                                                             : "border-slate-300"
-                                                    }`}
+                                                        }`}
                                                     onClick={() => togglePayer(member.userId)}
                                                 >
                                                     {isSelected && (
@@ -336,11 +373,10 @@ export function PaymentMethod({
                                                                 e.target.value
                                                             )
                                                         }
-                                                        className={`h-10 rounded-lg ${
-                                                            amountError
+                                                        className={`h-10 rounded-lg ${amountError
                                                                 ? "border-red-300 focus:ring-red-500"
                                                                 : ""
-                                                        }`}
+                                                            }`}
                                                         aria-label={`Amount paid by ${member.displayName}`}
                                                     />
                                                     {amountError && (
@@ -359,11 +395,10 @@ export function PaymentMethod({
                         {/* Validation status */}
                         {selectedPayers.size > 0 && (
                             <div
-                                className={`p-3 rounded-xl border flex items-start gap-2 ${
-                                    manualResult.isValid
+                                className={`p-3 rounded-xl border flex items-start gap-2 ${manualResult.isValid
                                         ? "bg-emerald-50 border-emerald-200"
                                         : "bg-amber-50 border-amber-200"
-                                }`}
+                                    }`}
                             >
                                 {manualResult.isValid ? (
                                     <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
@@ -372,17 +407,15 @@ export function PaymentMethod({
                                 )}
                                 <div>
                                     <p
-                                        className={`text-sm font-medium ${
-                                            manualResult.isValid
+                                        className={`text-sm font-medium ${manualResult.isValid
                                                 ? "text-emerald-700"
                                                 : "text-amber-700"
-                                        }`}
+                                            }`}
                                     >
                                         {manualResult.isValid
                                             ? "Amounts match the total bill!"
-                                            : `Delta: ${formatMoney(Math.abs(manualResult.delta))} ${
-                                                  manualResult.delta > 0 ? "over" : "under"
-                                              } the total`}
+                                            : `Delta: ${formatMoney(Math.abs(manualResult.delta))} ${manualResult.delta > 0 ? "over" : "under"
+                                            } the total`}
                                     </p>
                                     {!manualResult.isValid && (
                                         <p className="text-xs text-amber-600 mt-0.5">
@@ -445,23 +478,24 @@ export function PaymentMethod({
                         size="lg"
                         onClick={handleFinalize}
                         disabled={
-                            finalized ||
+                            isSaving ||
                             (mode === "manual" && !manualResult.isValid) ||
                             (mode === "manual" && selectedPayers.size === 0)
                         }
-                        className={`w-full h-12 rounded-2xl font-semibold text-base transition-all ${
-                            finalized
+                        className={`w-full h-12 rounded-2xl font-semibold text-base transition-all ${finalized
                                 ? "bg-emerald-600 hover:bg-emerald-600"
                                 : "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25"
-                        }`}
+                            }`}
                     >
                         {finalized ? (
                             <>
                                 <CheckCircle2 className="w-5 h-5 mr-2" />
-                                Payments Finalized
+                                Payments Saved
                             </>
+                        ) : isSaving ? (
+                            "Saving..."
                         ) : (
-                            "Finalize Payments"
+                            "Save Payments"
                         )}
                     </Button>
                 </div>

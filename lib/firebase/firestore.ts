@@ -166,7 +166,6 @@ export async function addExpense(
     roomId: string,
     description: string,
     totalAmount: number,
-    paidByUserId: string,
     splitType: "EQUAL" | "MANUAL",
     participants: { userId: string, owedAmount: number }[]
 ) {
@@ -179,7 +178,6 @@ export async function addExpense(
         roomId,
         description,
         totalAmount,
-        paidByUserId,
         splitType,
         createdAt: new Date().toISOString()
     };
@@ -196,6 +194,23 @@ export async function addExpense(
             hasPaid: false
         };
         batch.set(pRef, pData);
+    });
+
+    await batch.commit();
+}
+
+export async function updateRoomPayments(roomId: string, payments: { userId: string, paidAmount: number }[]) {
+    const batch = writeBatch(db);
+
+    payments.forEach(p => {
+        const pRef = doc(db, "roomPayments", `${roomId}_${p.userId}`);
+        const pData = {
+            roomId,
+            userId: p.userId,
+            paidAmount: p.paidAmount,
+            updatedAt: new Date().toISOString()
+        };
+        batch.set(pRef, pData, { merge: true });
     });
 
     await batch.commit();

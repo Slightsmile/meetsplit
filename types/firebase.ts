@@ -47,7 +47,7 @@ export interface ExpenseData {
     roomId: string;
     description: string;
     totalAmount: number;
-    paidByUserId: string;
+    paidByUserId?: string; // Legacy/Optional
     splitType: "EQUAL" | "MANUAL";
     createdAt: string;
 }
@@ -58,4 +58,11 @@ export interface ExpenseParticipantData {
     userId: string;
     owedAmount: number;
     hasPaid: boolean;
+}
+
+export interface RoomPaymentData {
+    roomId: string;
+    userId: string;
+    paidAmount: number;
+    updatedAt: string;
 }

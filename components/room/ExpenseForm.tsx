@@ -23,7 +23,6 @@ interface Props {
 export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }: Props) {
     const [description, setDescription] = useState("");
     const [amount, setAmount] = useState("");
-    const [paidBy, setPaidBy] = useState(currentUserId);
     const [splitType, setSplitType] = useState<"EQUAL" | "MANUAL">("EQUAL");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -115,14 +114,12 @@ export function ExpenseForm({ roomId, members, currentUserId, currency = "BDT" }
             roomId,
             description,
             finalTotal,
-            paidBy,
             splitType,
             participants
         );
 
         setDescription("");
         setAmount("");
-        setPaidBy(currentUserId);
         setSplitType("EQUAL");
         setMemberItems({});
         setVatEnabled(false);

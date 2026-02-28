@@ -12,14 +12,14 @@ import { useState } from "react";
 
 export default function SummaryPage({ params }: { params: { roomId: string } }) {
     const { user } = useAuth();
-    const { room, members, availabilities, expenses, expenseParts } = useRoomData(params.roomId);
+    const { room, members, availabilities, expenses, expenseParts, roomPayments } = useRoomData(params.roomId);
     const [copied, setCopied] = useState(false);
 
     if (!room || !user) return null;
 
     const memberIds = members.map(m => m.userId);
     const bestDates = calculateBestDates(availabilities, memberIds);
-    const simplifiedDebts = simplifyDebts(expenses, expenseParts);
+    const simplifiedDebts = simplifyDebts(expenses, expenseParts, roomPayments);
 
     const totalExpenses = expenses.reduce((sum, e) => sum + e.totalAmount, 0);
     const perPersonAvg = members.length > 0 ? totalExpenses / members.length : 0;
@@ -173,12 +173,10 @@ export default function SummaryPage({ params }: { params: { roomId: string } }) 
                         <div className="text-2xl font-bold text-slate-900 mb-4">{formatMoney(perPersonAvg)}</div>
                         <div className="space-y-2">
                             {expenses.map(exp => {
-                                const payer = getMemberName(exp.paidByUserId);
                                 return (
                                     <div key={exp.expenseId} className="flex justify-between text-sm border-b border-slate-100 pb-2 last:border-0">
                                         <div>
                                             <span className="font-medium text-slate-900">{exp.description}</span>
-                                            <span className="text-slate-400 ml-2">paid by {payer}</span>
                                         </div>
                                         <span className="font-medium">{formatMoney(exp.totalAmount)}</span>
                                     </div>

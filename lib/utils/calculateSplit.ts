@@ -1,4 +1,4 @@
-import { ExpenseData, ExpenseParticipantData } from "@/types/firebase";
+import { ExpenseData, ExpenseParticipantData, RoomPaymentData } from "@/types/firebase";
 
 export interface SimplifiedDebt {
     fromUser: string;
@@ -8,16 +8,17 @@ export interface SimplifiedDebt {
 
 export function simplifyDebts(
     expenses: ExpenseData[],
-    participants: ExpenseParticipantData[]
+    participants: ExpenseParticipantData[],
+    roomPayments: RoomPaymentData[]
 ): SimplifiedDebt[] {
     // 1. Calculate the Net Balance for each user.
     // Positive balance means they are OWED money.
     // Negative balance means they OWE money.
     const balances: Record<string, number> = {};
 
-    // Add what users paid (they are owed this money)
-    expenses.forEach(exp => {
-        balances[exp.paidByUserId] = (balances[exp.paidByUserId] || 0) + exp.totalAmount;
+    // Add what users paid in total (they are owed this money back)
+    roomPayments.forEach(payment => {
+        balances[payment.userId] = (balances[payment.userId] || 0) + payment.paidAmount;
     });
 
     // Subtract what users owe for specific parts of the bills

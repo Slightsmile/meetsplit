@@ -64,35 +64,41 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
     };
 
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100">
-            <div className="flex items-start sm:items-center justify-between gap-4">
-                {/* Left: Room name + admin icons */}
-                <div className="flex items-center gap-2 min-w-0">
-                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight truncate">
-                        {room.name}
-                    </h2>
-                    {isAdmin && (
-                        <>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={toggleLock}
-                                className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${room.isLocked ? "text-amber-600 bg-amber-50 hover:bg-amber-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
-                                title={room.isLocked ? "Room Locked" : "Lock Room"}
-                            >
-                                {room.isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={onToggleViewAsGuest}
-                                className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${viewAsGuest ? "text-violet-600 bg-violet-50 hover:bg-violet-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
-                                title={viewAsGuest ? "Viewing as Guest" : "View as Guest"}
-                            >
-                                {viewAsGuest ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </Button>
-                        </>
-                    )}
+        <div className="bg-white p-4 sm:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                {/* Left: Branding + Room name + admin icons */}
+                <div className="flex flex-col min-w-0">
+                    <a href="/" className="text-xs font-bold text-violet-600 tracking-wider uppercase hover:text-violet-700 transition-colors w-fit mb-1 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-violet-600"></span>
+                        MeetSplit
+                    </a>
+                    <div className="flex items-center gap-2 min-w-0">
+                        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight truncate">
+                            {room.name}
+                        </h2>
+                        {isAdmin && (
+                            <>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={toggleLock}
+                                    className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${room.isLocked ? "text-amber-600 bg-amber-50 hover:bg-amber-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
+                                    title={room.isLocked ? "Room Locked" : "Lock Room"}
+                                >
+                                    {room.isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={onToggleViewAsGuest}
+                                    className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${viewAsGuest ? "text-violet-600 bg-violet-50 hover:bg-violet-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
+                                    title={viewAsGuest ? "Viewing as Guest" : "View as Guest"}
+                                >
+                                    {viewAsGuest ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </Button>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 {/* Right: Share + Code + Copy — share centered relative to code row */}
@@ -115,11 +121,10 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
                             variant="ghost"
                             size="sm"
                             onClick={handleCopyCode}
-                            className="h-7 sm:h-8 px-2 sm:px-3 rounded-full text-slate-500 hover:text-slate-800 hover:bg-slate-100"
+                            className="h-7 sm:h-8 px-2 rounded-full text-slate-500 hover:text-slate-800 hover:bg-slate-100"
                             aria-label="Copy room URL"
                         >
                             {codeCopied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
-                            <span className="text-[10px] sm:text-xs font-semibold ml-0.5 sm:ml-1">{codeCopied ? "Copied!" : "Copy"}</span>
                         </Button>
                     </div>
                 </div>
