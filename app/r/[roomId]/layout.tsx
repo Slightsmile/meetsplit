@@ -25,12 +25,20 @@ export default function RoomLayout({
     const pathname = usePathname();
     const [viewAsGuest, setViewAsGuest] = useState(false);
 
+    // Check membership and redirect non-members to join page
+    const isMember = user ? members.some(m => m.userId === user.uid) : false;
+
     useEffect(() => {
-        if (!authLoading && !user) return;
-        if (!roomLoading && !room) {
+        if (authLoading || roomLoading) return;
+        if (!room) {
             router.push("/");
+            return;
         }
-    }, [user, room, authLoading, roomLoading, router]);
+        // If user is signed in but not a member, redirect to join page
+        if (user && !members.some(m => m.userId === user.uid)) {
+            router.replace(`/join/${params.roomId}`);
+        }
+    }, [user, room, members, authLoading, roomLoading, router, params.roomId]);
 
     const isAdmin = room ? room.adminId === user?.uid : false;
     const isEventMode = room?.isEventMode ?? false;
@@ -51,7 +59,7 @@ export default function RoomLayout({
         );
     }
 
-    if (!room || !user) return null;
+    if (!room || !user || !isMember) return null;
 
     const allTabs = [
         { name: "Overview", href: `/r/${params.roomId}` },

@@ -65,44 +65,42 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
 
     return (
         <div className="bg-white p-4 sm:p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 mb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex justify-between gap-4">
                 {/* Left: Branding + Room name + admin icons */}
-                <div className="flex flex-col min-w-0">
+                <div className="flex flex-col min-w-0 flex-1">
                     <a href="/" className="text-xs font-bold text-violet-600 tracking-wider uppercase hover:text-violet-700 transition-colors w-fit mb-1 flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-violet-600"></span>
                         MeetSplit
                     </a>
-                    <div className="flex items-center gap-2 min-w-0">
-                        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight truncate">
-                            {room.name}
-                        </h2>
-                        {isAdmin && (
-                            <>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={toggleLock}
-                                    className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${room.isLocked ? "text-amber-600 bg-amber-50 hover:bg-amber-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
-                                    title={room.isLocked ? "Room Locked" : "Lock Room"}
-                                >
-                                    {room.isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={onToggleViewAsGuest}
-                                    className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${viewAsGuest ? "text-violet-600 bg-violet-50 hover:bg-violet-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
-                                    title={viewAsGuest ? "Viewing as Guest" : "View as Guest"}
-                                >
-                                    {viewAsGuest ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </Button>
-                            </>
-                        )}
-                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight break-words">
+                        {room.name}
+                    </h2>
+                    {isAdmin && (
+                        <div className="flex items-center gap-1 mt-1">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={toggleLock}
+                                className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${room.isLocked ? "text-amber-600 bg-amber-50 hover:bg-amber-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
+                                title={room.isLocked ? "Room Locked" : "Lock Room"}
+                            >
+                                {room.isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={onToggleViewAsGuest}
+                                className={`h-8 px-2 rounded-lg transition-colors shrink-0 ${viewAsGuest ? "text-violet-600 bg-violet-50 hover:bg-violet-100" : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"}`}
+                                title={viewAsGuest ? "Viewing as Guest" : "View as Guest"}
+                            >
+                                {viewAsGuest ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </Button>
+                        </div>
+                    )}
                 </div>
 
-                {/* Right: Share + Code + Copy — share centered relative to code row */}
-                <div className="flex items-center gap-3 shrink-0">
+                {/* Right: Share on top, Code+Copy below */}
+                <div className="flex flex-col items-end gap-2 shrink-0">
                     <Button
                         variant="default"
                         size="sm"
@@ -132,7 +130,7 @@ export function RoomHeader({ room, currentUserId, members, availabilities, expen
 
             {/* Share panel (shown when share button is clicked on desktop) */}
             {sharePanelOpen && (
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Invite Link</label>
                     <div className="flex items-center gap-2">
                         <div className="flex-1 font-mono text-sm bg-white border border-slate-200 rounded-lg px-3 py-2.5 text-slate-700 truncate select-all">
