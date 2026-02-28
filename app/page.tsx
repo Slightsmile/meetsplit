@@ -75,17 +75,17 @@ export default function Home() {
     }
 
     return (
-        <main className="h-screen bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50 flex flex-col relative overflow-hidden">
+        <main className="min-h-screen bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50 flex flex-col relative overflow-hidden">
             {/* Ambient glows */}
-            <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none z-0"></div>
-            <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none z-0"></div>
+            <div className="absolute top-0 right-0 -m-32 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
 
             {/* Main Content Wrapper */}
-            <div className="flex-1 flex flex-col md:flex-row items-center justify-center w-full max-w-6xl mx-auto z-10 h-full overflow-hidden">
+            <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 w-full z-10 xl:pt-16">
+                <div className="w-full max-w-5xl grid md:grid-cols-2 gap-12 items-center relative">
 
-                {/* Hero Section - Fixed/Centered on Desktop */}
-                <div className="w-full md:w-1/2 p-4 sm:p-8 flex flex-col justify-center h-auto md:h-full z-10 shrink-0 mt-8 md:mt-0">
-                    <div className="space-y-8 max-w-md mx-auto md:mx-0">
+                    {/* Hero Section */}
+                    <div className="space-y-8">
                         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
                             Friends meet. <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-blue-600">Bills split.</span>
                         </h1>
@@ -99,11 +99,9 @@ export default function Home() {
                             <div className="flex flex-col items-center group"><div className="p-3 bg-emerald-100/50 rounded-2xl mb-3 group-hover:scale-110 transition-transform"><Receipt className="w-7 h-7 text-emerald-600" /></div><span className="text-sm font-medium">Split Bills</span></div>
                         </div>
                     </div>
-                </div>
 
-                {/* Action Cards - Scrollable on Desktop */}
-                <div className="w-full md:w-1/2 p-4 md:p-8 h-full overflow-y-auto hide-scrollbar pb-24 flex flex-col items-center md:items-start z-10">
-                    <div className="space-y-6 relative w-full max-w-md md:my-auto md:py-16">
+                    {/* Action Cards */}
+                    <div className="space-y-6 relative">
                         <div className="absolute inset-0 bg-gradient-to-tr from-blue-300 to-violet-300 blur-3xl opacity-30 rounded-full -z-10 transform scale-105"></div>
                         <Card className="shadow-2xl shadow-blue-900/5 border-0 ring-1 ring-white/60 rounded-[2rem] bg-white/80 backdrop-blur-2xl overflow-hidden">
                             <CardHeader className="bg-white/50 pb-5 pt-8 border-b border-white/50 text-center">
@@ -178,9 +176,10 @@ export default function Home() {
                 </div>
             </div>
 
-            {/* Footer / Tribute - Fixed at bottom */}
-            <footer className="w-full py-6 text-center z-20 absolute bottom-0 left-0 bg-white/30 backdrop-blur-sm border-t border-white/40">
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm font-medium px-4">
+            {/* Footer / Tribute */}
+            <footer className="w-full py-8 text-center z-20 mt-auto relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent pointer-events-none"></div>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm font-medium relative z-10 px-4">
                     <p className="flex items-center gap-1.5 text-slate-500">
                         <span className="text-slate-400">Crafted with 💜 by</span>
                         <a href="https://mohi-uddin.me/" target="_blank" rel="noopener noreferrer" className="text-violet-600 font-bold hover:text-violet-700 hover:scale-105 transition-all drop-shadow-sm px-1">
