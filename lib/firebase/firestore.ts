@@ -254,3 +254,19 @@ export async function updateRoomPayments(roomId: string, payments: { userId: str
 
     await batch.commit();
 }
+
+export async function deleteExpense(expenseId: string) {
+    const batch = writeBatch(db);
+
+    // Main expense doc
+    batch.delete(doc(db, "expenses", expenseId));
+
+    // Participant docs
+    const partQuery = query(collection(db, "expenseParticipants"), where("expenseId", "==", expenseId));
+    const partDocs = await getDocs(partQuery);
+    partDocs.forEach(d => {
+        batch.delete(d.ref);
+    });
+
+    await batch.commit();
+}

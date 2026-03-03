@@ -6,7 +6,7 @@ import { BestDateCard } from "@/components/room/BestDateCard";
 import { BalancesList } from "@/components/room/BalancesList";
 import { calculateBestDates } from "@/lib/utils/calculateBestDate";
 import { simplifyDebts } from "@/lib/utils/calculateSplit";
-import { updateRoomAnnouncement, removeMember, toggleEventMode, setEventDate } from "@/lib/firebase/firestore";
+import { updateRoomAnnouncement, removeMember, toggleEventMode, setEventDate, deleteExpense } from "@/lib/firebase/firestore";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -363,9 +363,24 @@ export default function RoomOverview({ params }: { params: { roomId: string } })
                                             <div className="flex flex-col min-w-0 flex-1">
                                                 <span className="font-semibold text-slate-900 truncate">{exp.description}</span>
                                             </div>
-                                            <span className="font-bold text-slate-900 bg-white shadow-sm px-2 sm:px-3 py-1.5 rounded-lg border border-slate-100 text-sm sm:text-base whitespace-nowrap shrink-0">
-                                                {formatMoney(exp.totalAmount)}
-                                            </span>
+                                            <div className="flex items-center gap-3 shrink-0">
+                                                <span className="font-bold text-slate-900 bg-white shadow-sm px-2 sm:px-3 py-1.5 rounded-lg border border-slate-100 text-sm sm:text-base whitespace-nowrap">
+                                                    {formatMoney(exp.totalAmount)}
+                                                </span>
+                                                {(isAdmin || !room.isLocked) && (
+                                                    <button
+                                                        onClick={async () => {
+                                                            if (confirm(`Delete '${exp.description}'?`)) {
+                                                                await deleteExpense(exp.expenseId);
+                                                            }
+                                                        }}
+                                                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                                                        title="Delete expense"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
                                     );
                                 })}

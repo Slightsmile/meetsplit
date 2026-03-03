@@ -5,11 +5,11 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useRoomData } from "@/lib/hooks/useRoomData";
 import { ExpenseForm } from "@/components/room/ExpenseForm";
 import { PaymentMethod } from "@/components/room/PaymentMethod";
-import { updateRoomCurrency, updateRoomPayments } from "@/lib/firebase/firestore";
+import { updateRoomCurrency, updateRoomPayments, deleteExpense } from "@/lib/firebase/firestore";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Coins } from "lucide-react";
+import { Coins, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const CURRENCIES = [
@@ -104,8 +104,23 @@ export default function SplitPage({ params }: { params: { roomId: string } }) {
                                             <p className="font-medium text-slate-900">{exp.description}</p>
                                             <p className="text-xs text-slate-500">{date}</p>
                                         </div>
-                                        <div className="font-bold text-slate-900">
-                                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: room.currency }).format(exp.totalAmount)}
+                                        <div className="flex items-center gap-3">
+                                            <div className="font-bold text-slate-900">
+                                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: room.currency }).format(exp.totalAmount)}
+                                            </div>
+                                            {canEdit && (
+                                                <button
+                                                    onClick={async () => {
+                                                        if (confirm(`Delete '${exp.description}'?`)) {
+                                                            await deleteExpense(exp.expenseId);
+                                                        }
+                                                    }}
+                                                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                                                    title="Delete expense"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            )}
                                         </div>
                                     </CardContent>
                                 </Card>
