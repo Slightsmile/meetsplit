@@ -7,8 +7,10 @@ No signup required. Fully anonymous, device-based sessions.
 ## Features
 
 - **Meet** — Calendar-based availability picker. See at a glance which dates work for everyone.
-- **Split** — Add expenses (equal or manual split), track payments, and see who owes whom.
-- **Event Mode** — Admin can lock the room to show only final date and announcements.
+- **Split** — Add expenses (equal or manual split), track payments, delete expenses, and see who owes whom.
+- **Vibrant Design** — A modern, dynamic, and colorful user interface that makes event planning fun.
+- **Integrated Sharing** — Quickly copy a room summary and link right from the header.
+- **Event Mode & Room Locking** — Admins can lock the room to finalize details, restricting edits to expenses, dates, and announcements.
 - **Session Recovery** — Lost your session? Re-enter your name + room code to get back in.
 - **Auto-Cleanup** — Rooms and anonymous users older than 30 days are automatically deleted.
 
@@ -127,8 +129,8 @@ app/                  # Next.js App Router pages
   join/[roomId]/      # Join-by-link page
   r/[roomId]/         # Room layout + tabs
     page.tsx           # Overview tab
-    availability/      # Meet tab
-    split/             # Split tab
+    availability/      # Meet tab (availability)
+    split/             # Split tab (expenses & payments)
     summary/           # Summary page
 components/           # React components
   room/               # Room-specific components
@@ -159,11 +161,3 @@ types/                # TypeScript type definitions
 ## License
 
 MIT
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
