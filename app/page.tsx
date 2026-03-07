@@ -81,86 +81,86 @@ export default function Home() {
             <div className="absolute bottom-0 left-0 -m-32 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl mix-blend-multiply border-none pointer-events-none"></div>
 
             {/* Main Content Wrapper */}
-            <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 w-full z-10 xl:pt-16">
-                <div className="w-full max-w-5xl grid md:grid-cols-2 gap-12 items-center relative">
+            <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-4 w-full z-10">
+                <div className="w-full max-w-5xl grid md:grid-cols-2 gap-8 lg:gap-10 items-center relative">
 
                     {/* Hero Section */}
-                    <div className="space-y-8">
+                    <div className="space-y-6 lg:space-y-5">
                         <div className="flex items-center gap-3 md:gap-4 mb-2">
                             <img src="/logo.png" alt="MeetSplit Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain" />
                             <img src="/Logo Text.png" alt="MeetSplit" className="h-6 md:h-8 object-contain" />
                         </div>
-                        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
+                        <h1 className="text-5xl sm:text-6xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
                             Friends <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#09d6ba] to-[#017e8c]">meet.</span> <br />
                             Bills <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#004b7f] to-[#1b9ae0]">split.</span>
                         </h1>
-                        <p className="text-lg text-slate-600">
+                        <p className="text-lg lg:text-base text-slate-600">
                             The easiest way to find a date that works for everyone and split the trip expenses without the headache.
                         </p>
 
-                        <div className="flex space-x-8 text-slate-600 pt-6">
-                            <div className="flex flex-col items-center group"><div className="p-3 bg-blue-100/50 rounded-2xl mb-3 group-hover:scale-110 transition-transform"><Users className="w-7 h-7 text-blue-600" /></div><span className="text-sm font-medium">No Signup</span></div>
-                            <div className="flex flex-col items-center group"><div className="p-3 bg-purple-100/50 rounded-2xl mb-3 group-hover:scale-110 transition-transform"><Calendar className="w-7 h-7 text-purple-600" /></div><span className="text-sm font-medium">Find Dates</span></div>
-                            <div className="flex flex-col items-center group"><div className="p-3 bg-emerald-100/50 rounded-2xl mb-3 group-hover:scale-110 transition-transform"><Receipt className="w-7 h-7 text-emerald-600" /></div><span className="text-sm font-medium">Split Bills</span></div>
+                        <div className="flex space-x-8 text-slate-600 pt-2 lg:pt-4">
+                            <div className="flex flex-col items-center group"><div className="p-3 bg-blue-100/50 rounded-2xl mb-2 lg:mb-2 group-hover:scale-110 transition-transform"><Users className="w-6 h-6 lg:w-6 lg:h-6 text-blue-600" /></div><span className="text-sm lg:text-xs font-medium">No Signup</span></div>
+                            <div className="flex flex-col items-center group"><div className="p-3 bg-purple-100/50 rounded-2xl mb-2 lg:mb-2 group-hover:scale-110 transition-transform"><Calendar className="w-6 h-6 lg:w-6 lg:h-6 text-purple-600" /></div><span className="text-sm lg:text-xs font-medium">Find Dates</span></div>
+                            <div className="flex flex-col items-center group"><div className="p-3 bg-emerald-100/50 rounded-2xl mb-2 lg:mb-2 group-hover:scale-110 transition-transform"><Receipt className="w-6 h-6 lg:w-6 lg:h-6 text-emerald-600" /></div><span className="text-sm lg:text-xs font-medium">Split Bills</span></div>
                         </div>
                     </div>
 
                     {/* Action Cards */}
-                    <div className="space-y-6 relative">
+                    <div className="space-y-4 lg:space-y-3 relative">
                         <div className="absolute inset-0 bg-gradient-to-tr from-blue-300 to-violet-300 blur-3xl opacity-30 rounded-full -z-10 transform scale-105"></div>
                         <Card className="shadow-2xl shadow-blue-900/5 border-0 ring-1 ring-white/60 rounded-[2rem] bg-white/80 backdrop-blur-2xl overflow-hidden">
-                            <CardHeader className="bg-white/50 pb-5 pt-8 border-b border-white/50 text-center">
-                                <CardTitle className="text-2xl font-bold text-slate-800">Create a Room</CardTitle>
+                            <CardHeader className="bg-white/50 pb-3 pt-5 lg:pb-3 lg:pt-4 border-b border-white/50 text-center">
+                                <CardTitle className="text-xl lg:text-2xl font-bold text-slate-800">Create a Room</CardTitle>
                             </CardHeader>
-                            <CardContent className="pt-8 px-6 pb-8">
-                                <form onSubmit={handleCreateRoom} className="space-y-6">
-                                    <div className="space-y-2">
+                            <CardContent className="pt-5 px-6 pb-6 lg:pt-4 lg:pb-4">
+                                <form onSubmit={handleCreateRoom} className="space-y-4 lg:space-y-3">
+                                    <div className="space-y-1.5 lg:space-y-1">
                                         <label className="text-sm font-semibold text-slate-600 ml-1">Your Name</label>
                                         <Input
                                             placeholder="e.g. Alex"
                                             value={displayName}
                                             onChange={(e) => setDisplayName(e.target.value)}
-                                            className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
+                                            className="h-12 lg:h-11 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-base px-4 shadow-sm"
                                             required
                                         />
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1.5 lg:space-y-1">
                                         <label className="text-sm font-semibold text-slate-600 ml-1">Room Name</label>
                                         <Input
                                             placeholder="e.g. Weekend Trip, Friday Dinner..."
                                             value={roomName}
                                             onChange={(e) => setRoomName(e.target.value)}
-                                            className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
+                                            className="h-12 lg:h-11 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-base px-4 shadow-sm"
                                             required
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-[#004b7f] to-[#1b9ae0] hover:from-[#004b7f] hover:to-[#1b9ae0] hover:opacity-90 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isCreating || !displayName.trim()}>
+                                    <Button type="submit" className="w-full h-12 lg:h-11 rounded-2xl bg-gradient-to-r from-[#004b7f] to-[#1b9ae0] hover:from-[#004b7f] hover:to-[#1b9ae0] hover:opacity-90 text-white font-bold text-lg lg:text-base shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isCreating || !displayName.trim()}>
                                         {isCreating ? "Creating..." : "Create New Room"}
                                     </Button>
                                 </form>
                             </CardContent>
                         </Card>
 
-                        <div className="relative flex py-4 items-center">
+                        <div className="relative flex py-2 lg:py-1 items-center">
                             <div className="flex-grow border-t border-slate-200/60"></div>
-                            <span className="flex-shrink-0 mx-4 text-slate-400 text-sm font-bold tracking-widest uppercase">Or</span>
+                            <span className="flex-shrink-0 mx-4 text-slate-400 text-sm lg:text-xs font-bold tracking-widest uppercase">Or</span>
                             <div className="flex-grow border-t border-slate-200/60"></div>
                         </div>
 
                         <Card className="shadow-2xl shadow-blue-900/5 border-0 ring-1 ring-white/60 rounded-[2rem] bg-white/80 backdrop-blur-2xl">
-                            <CardContent className="pt-8 px-6 pb-8">
-                                <form onSubmit={handleJoinRoom} className="space-y-6">
-                                    <div className="space-y-2">
+                            <CardContent className="pt-5 px-6 pb-6 lg:pt-4 lg:pb-4">
+                                <form onSubmit={handleJoinRoom} className="space-y-4 lg:space-y-3">
+                                    <div className="space-y-1.5 lg:space-y-1">
                                         <label className="text-sm font-semibold text-slate-600 ml-1">Your Name</label>
                                         <Input
                                             placeholder="e.g. Sam"
                                             value={joinDisplayName}
                                             onChange={(e) => setJoinDisplayName(e.target.value)}
-                                            className="h-14 sm:h-12 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-lg sm:text-base px-4 shadow-sm"
+                                            className="h-12 lg:h-11 rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all text-base px-4 shadow-sm"
                                             required
                                         />
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1.5 lg:space-y-1">
                                         <label className="text-sm font-semibold text-slate-600 ml-1">Room Code</label>
                                         <Input
                                             placeholder="6-DIGIT CODE"
@@ -168,10 +168,10 @@ export default function Home() {
                                             onChange={(e) => setRoomId(e.target.value)}
                                             maxLength={6}
                                             required
-                                            className="h-14 sm:h-12 text-xl sm:text-lg uppercase tracking-[0.25em] font-bold text-center rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:tracking-normal placeholder:font-normal shadow-sm"
+                                            className="h-12 lg:h-11 text-lg uppercase tracking-[0.25em] font-bold text-center rounded-2xl bg-white/50 border-white/60 focus:bg-white focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:tracking-normal placeholder:font-normal shadow-sm"
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full h-14 rounded-2xl bg-gradient-to-r from-[#09d6ba] to-[#017e8c] hover:from-[#09d6ba] hover:to-[#017e8c] hover:opacity-90 text-white font-bold text-lg shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isJoining || !joinDisplayName.trim()}>
+                                    <Button type="submit" className="w-full h-12 lg:h-11 rounded-2xl bg-gradient-to-r from-[#09d6ba] to-[#017e8c] hover:from-[#09d6ba] hover:to-[#017e8c] hover:opacity-90 text-white font-bold text-lg lg:text-base shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5" disabled={isJoining || !joinDisplayName.trim()}>
                                         {isJoining ? "Joining..." : "Join Existing Room"}
                                     </Button>
                                 </form>
@@ -182,7 +182,7 @@ export default function Home() {
             </div>
 
             {/* Footer / Tribute */}
-            <footer className="w-full py-8 text-center z-20 mt-auto relative">
+            <footer className="w-full py-4 lg:py-3 text-center z-20 mt-auto relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent pointer-events-none"></div>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm font-medium relative z-10 px-4">
                     <p className="flex items-center gap-1.5 text-slate-500">
